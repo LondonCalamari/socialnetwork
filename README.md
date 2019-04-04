@@ -3,6 +3,7 @@ The main focus of this assignment is to read graph data from a given file, build
 
 TODO List:
 #Part 1: Graph ADT (7%)
+[ ] gg
 
 #Part 2: Dijkstra's algorithm, PQ (8%), Dijkstra (15%)
 
