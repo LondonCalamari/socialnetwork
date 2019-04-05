@@ -29,7 +29,7 @@ Graph newGraph(int noNodes) {
 
 // Creates a new adjListNode
 adjListNode newNode(int v, int weight) {
-    adjListNode node = malloc(sizeof(struct adjList));
+    adjListNode node = malloc(sizeof(struct _adjListNode));
     node->w = v;
     node->weight = weight;
     node->next = NULL;
@@ -37,10 +37,8 @@ adjListNode newNode(int v, int weight) {
 }  
 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
-    if (g == NULL) {
-    return;
-    }
-    AdjList graphlist = g->NodeList; 
+    if (
+
 }
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     if (src > nV || dest > nV || dest < 0 || src < 0) {
