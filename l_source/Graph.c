@@ -1,9 +1,11 @@
 // Graph ADT
 
 #include "Graph.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stdbool.h>
 
 AdjList newNode(int v, int weight);
 
@@ -16,13 +18,21 @@ typedef struct _GraphRep {
 // Graph struct
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
-    Graph g = malloc(sizeof(Graph));
+    Graph g = malloc(sizeof(struct _GraphRep));
     g->nV = noNodes;
     g->nE = 0;
-    g->Nodelist = malloc(sizeof(adjListNode) * nV);
+    g->Nodelist = malloc(sizeof(AdjList) * nV);
     // for each node it costs 0 to reach itself
     for (int i = 0; i < nV; i++) {
         g->Nodelist[i] = newNode(i, 0);
+    }
+
+    /*  for testing we will fill the graph randomly */
+    for (int i = 0; i < nV; i++) {
+        int r = rand()%(nV*2);
+        for (int j = 0; j < r; j++) {
+            insertEdge(g, i, rand()%nV, rand()%50);
+        }
     }
     return g;
 }
@@ -61,7 +71,7 @@ void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 }
 
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
-    if (src > nV || dest > nV || dest < 0 || src < 0) {
+    if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return;
     }
     AdjList prev = g->Nodelist[src - 1];
@@ -90,7 +100,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
     return false;
 }
 
-// is this it?
+// returns number of verticies in a graph
 int numVerticies(Graph g) { 
     return g->nV;
 }
