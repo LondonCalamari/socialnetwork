@@ -4,18 +4,21 @@
 
 typedef struct _GraphRep {
    int numNodes;
-   AdjList *Nodelist;
+   AdjList NodeList;
 } GraphRep;
 
 Graph newGraph(int noNodes) {
     Graph g = malloc(sizeof(Graph));
     g->numNode = noNodes;
-    g->Nodelist = malloc(sizeof(adjListNode) * numNodes);
+    g->NodeList = malloc(sizeof(adjListNode) * numNodes);
     return g;
 }
 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
-    
+    if (g == NULL) {
+    return;
+    }
+    AdjList graphlist = g->NodeList; 
 }
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     
