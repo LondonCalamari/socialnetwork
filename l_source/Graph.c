@@ -14,7 +14,7 @@ typedef struct _GraphRep {
 } GraphRep;
 
 // Graph struct
-Graph newGraph(Vertex noNodes) {
+Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
     Graph g = malloc(sizeof(Graph));
     g->nV = noNodes;
