@@ -43,8 +43,21 @@ void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     AdjList graphlist = g->NodeList; 
 }
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
-    
+    if (src > nV || dest > nV || dest < 0 || src < 0) {
+        return;
+    }
+    AdjList prev = g->Nodelist[src - 1];
+    AdjList curr = prev->next;
+    while (curr != NULL) {
+        if (curr->w == dest) {
+            prev->next = curr->next;
+            free(curr);
+        }
+        prev = curr;
+        curr = curr->next;
+    }
 }
+
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
     if (src > nV || dest > nV || dest < 0 || src < 0) {
         return false;
