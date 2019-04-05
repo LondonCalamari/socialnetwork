@@ -3,14 +3,14 @@ The main focus of this assignment is to read graph data from a given file, build
 
 ### Part 1: Graph ADT (7%)
 - [x] newNode
-- [ ] insertEdge
-- [ ] removeEdge
-- [ ] adjacent
-- [ ] numVerticies
+- [x] insertEdge
+- [x] removeEdge
+- [x] adjacent
+- [x] numVerticies
 - [ ] outIncident
 - [ ] inIncident
-- [ ] showGraph
-- [ ] freeGraph
+- [x] showGraph
+- [x] freeGraph
 
 ### Part 2: Dijkstra's algorithm, PQ (8%), Dijkstra (15%)
 - [ ] newPQ
