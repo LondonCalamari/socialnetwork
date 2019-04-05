@@ -2,9 +2,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+typedef struct _GraphRep {
+   int numNodes;
+   AdjList *Nodelist;
+} GraphRep;
+
 Graph newGraph(int noNodes) {
     Graph g = malloc(sizeof(Graph));
-    while (
+    g->numNode = noNodes;
+    g->Nodelist = malloc(sizeof(adjListNode) * numNodes);
     return g;
 }
 
