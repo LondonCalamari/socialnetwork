@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+adjListNode newNode(int v, int weight);
+
 typedef struct _GraphRep {
    int nV; // number of vertices
    int nE; // number of edges
@@ -12,7 +14,7 @@ typedef struct _GraphRep {
 } GraphRep;
 
 // Graph struct
-Graph newGraph(int noNodes) {
+Graph newGraph(Vertex noNodes) {
     assert(noNodes >= 0);
     Graph g = malloc(sizeof(Graph));
     g->nV = noNodes;
@@ -28,7 +30,7 @@ Graph newGraph(int noNodes) {
 
 // Creates a new adjListNode
 adjListNode newNode(int v, int weight) {
-    adjListNode node = malloc(sizeof(struct adjListNode));
+    adjListNode node = malloc(sizeof(struct adjList));
     node->w = v;
     node->weight = weight;
     node->next = NULL;
