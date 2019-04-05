@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void  insertEdge(Graph g, Vertex src, Vertex dest, int weight);
+Graph newGraph(int noNodes);
+
+void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
+    
+}
 void  removeEdge(Graph g, Vertex src, Vertex dest);
 bool  adjacent(Graph g, Vertex src, Vertex dest);
 int  numVerticies(Graph g);
