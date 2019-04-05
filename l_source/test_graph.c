@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
     // Test Show graph
     showGraph(g);
 
-
     freeGraph(g);
     return EXIT_SUCCESS;
 }

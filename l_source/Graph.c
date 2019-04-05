@@ -1,9 +1,11 @@
 // Graph ADT
 
 #include "Graph.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <stdbool.h>
 
 AdjList newNode(int v, int weight);
 
@@ -23,6 +25,14 @@ Graph newGraph(int noNodes) {
     // for each node it costs 0 to reach itself
     for (int i = 0; i < nV; i++) {
         g->Nodelist[i] = newNode(i, 0);
+    }
+
+    /*  for testing we will fill the graph randomly */
+    for (int i = 0; i < nV; i++) {
+        int r = rand()%(nV*2);
+        for (int j = 0; j < r; j++) {
+            insertEdge(g, i, rand()%nV, rand()%50);
+        }
     }
     return g;
 }
@@ -90,7 +100,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
     return false;
 }
 
-// is this it?
+// returns number of verticies in a graph
 int numVerticies(Graph g) { 
     return g->nV;
 }
