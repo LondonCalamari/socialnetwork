@@ -5,12 +5,12 @@
 #include <stdio.h>
 #include <assert.h>
 
-adjListNode newNode(int v, int weight);
+AdjList newNode(int v, int weight);
 
 typedef struct _GraphRep {
    int nV; // number of vertices
    int nE; // number of edges
-   AdjList Nodelist;
+   AdjList nodeList;
 } GraphRep;
 
 // Graph struct
@@ -28,23 +28,43 @@ Graph newGraph(int noNodes) {
 }
 
 // Creates a new adjListNode
-adjListNode newNode(int v, int weight) {
-    adjListNode node = malloc(sizeof(struct _adjListNode));
+AdjList newNode(int v, int weight) {
+    AdjList node = malloc(sizeof(struct _adjListNode));
     node->w = v;
     node->weight = weight;
     node->next = NULL;
     return node;
 }  
 
+// insert edge in increasing order of cost 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
-    if (
-
+    // first check if the edge isn't already in g
+    if (g->nV < src || src < 0 || g->nV < dest || dest < 0) { return; }
+    if (adjacent(g, src, dest)) { return; }
+    else {
+        // adding the node to the end of the list
+        if (g->nodeList[src]->next == NULL) {
+            g->nodeList[src]->next = newNode(dest, weight);
+        } else {
+            // adding the node in order of cost
+            AdjList prev = g->nodeList[src];
+            AdjList curr = prev->next;
+            while (curr != NULL && curr->weight < weight) {
+                curr = curr->next;     
+            }
+            AdjList new = newNode(dest, weight);
+            prev->next = new;
+            new->next = curr;
+        }
+        g->nE++;
+    }
 }
+
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     
 }
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
-    if (src > nV || dest > nV || dest < 0 || src < 0) {
+    if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return false;
     }
     AdjList curr = g->Nodelist[src - 1]; // not sure if -1 needed
@@ -70,10 +90,31 @@ AdjList inIncident(Graph g, Vertex v) {
 
 }
 
+// Prints the graph as the adjacency list
 void  showGraph(Graph g) {
-
+    printf("nV: %d nE: %d\n", g->nV, g->nE);
+    printf("The adjacency list is: \n");
+    for (int i = 0; i < g->nV; i++) {
+        AdjList curr = g->nodeList[i];
+        printf("[%d] : ", curr->w);
+        while (curr != NULL) {
+            printf ("<%d> ($%d) --> ", curr->w, curr->weight);
+            curr = curr->next;
+        }
+        printf ("NULL\n");
+    }
 }
 
 void  freeGraph(Graph g) {
-
+    // free all the nodes in the nodeList
+    for (int i = 0; i < g->nV; i++) {
+        AdjList curr = g->nodeList[i];
+        while (curr != NULL) {
+            AdjList temp = curr;
+            curr = curr->next;
+            free(temp);
+        }
+    }
+    free(g->nodeList);
+    free(g);
 }
