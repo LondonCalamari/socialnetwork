@@ -1,18 +1,40 @@
-#include <Graph.h>
+// Graph ADT
+
+#include "Graph.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
+
+adjListNode newNode(int v, int weight);
 
 typedef struct _GraphRep {
-   int numNodes;
-   AdjList NodeList;
+   int nV; // number of vertices
+   int nE; // number of edges
+   AdjList *Nodelist;
 } GraphRep;
 
-Graph newGraph(int noNodes) {
+// Graph struct
+Graph newGraph(Vertex noNodes) {
+    assert(noNodes >= 0);
     Graph g = malloc(sizeof(Graph));
-    g->numNode = noNodes;
-    g->NodeList = malloc(sizeof(adjListNode) * numNodes);
+    g->nV = noNodes;
+    g->nE = 0;
+    g->Nodelist = malloc(sizeof(adjListNode) * nV);
+    // for each node it costs 0 to reach itself
+    for (int i = 0; i < nV; i++) {
+        g->Nodelist[i] = newNode(i, 0);
+    }
     return g;
 }
+
+// Creates a new adjListNode
+adjListNode newNode(int v, int weight) {
+    adjListNode node = malloc(sizeof(struct adjList));
+    node->w = v;
+    node->weight = weight;
+    node->next = NULL;
+    return node;
+}  
 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     if (g == NULL) {
