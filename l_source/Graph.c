@@ -46,8 +46,17 @@ void  removeEdge(Graph g, Vertex src, Vertex dest) {
     
 }
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
-    
-    return ;
+    if (src > nV || dest > nV || dest < 0 || src < 0) {
+        return false;
+    }
+    AdjList curr = g->Nodelist[src - 1]; // not sure if -1 needed
+    while (curr != NULL) {
+        if ( curr->w == dest) {
+            return true;
+        }   
+        curr = curr->next;
+    }
+    return false;
 }
 
 // is this it?
