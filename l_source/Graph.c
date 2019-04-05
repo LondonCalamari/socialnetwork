@@ -10,7 +10,7 @@ adjListNode newNode(int v, int weight);
 typedef struct _GraphRep {
    int nV; // number of vertices
    int nE; // number of edges
-   AdjList Nodelist;
+   AdjList nodeList;
 } GraphRep;
 
 // Graph struct
@@ -71,7 +71,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
 }
 
 // is this it?
-int  numVerticies(Graph g) { 
+int numVerticies(Graph g) { 
     return g->nV;
 }
 
