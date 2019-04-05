@@ -23,15 +23,15 @@ Graph newGraph(int noNodes) {
     g->nE = 0;
     g->Nodelist = malloc(sizeof(adjListNode) * noNodes);
     // for each node it costs 0 to reach itself
-    for (int i = 0; i < nV; i++) {
+    for (int i = 0; i < noNodes; i++) {
         g->Nodelist[i] = newNode(i, 0);
     }
 
     /*  for testing we will fill the graph randomly */
-    for (int i = 0; i < nV; i++) {
-        int r = rand()%(nV*2);
+    for (int i = 0; i < noNodes; i++) {
+        int r = rand()%(noNodes*2);
         for (int j = 0; j < r; j++) {
-            insertEdge(g, i, rand()%nV, rand()%50);
+            insertEdge(g, i, rand()%noNodes, rand()%50);
         }
     }
     return g;
@@ -140,4 +140,20 @@ void  freeGraph(Graph g) {
     }
     free(g->nodeList);
     free(g);
+}
+
+
+
+
+int main(int argc, char *argv[]) {
+    printf("Enter nV: ");
+    int nV;
+    scanf("%d", &nV);
+    Graph g = newGraph(nV);
+    
+    // Test Show graph
+    showGraph(g);
+
+    freeGraph(g);
+    return EXIT_SUCCESS;
 }
