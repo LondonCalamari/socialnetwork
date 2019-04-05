@@ -16,10 +16,10 @@ typedef struct _GraphRep {
 // Graph struct
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
-    Graph g = malloc(sizeof(Graph));
+    Graph g = malloc(sizeof(GraphRep));
     g->nV = noNodes;
     g->nE = 0;
-    g->Nodelist = malloc(sizeof(adjListNode) * nV);
+    g->Nodelist = malloc(sizeof(adjListNode) * noNodes);
     // for each node it costs 0 to reach itself
     for (int i = 0; i < nV; i++) {
         g->Nodelist[i] = newNode(i, 0);
