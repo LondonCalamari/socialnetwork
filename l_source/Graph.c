@@ -21,10 +21,10 @@ Graph newGraph(int noNodes) {
     Graph g = malloc(sizeof(GraphRep));
     g->nV = noNodes;
     g->nE = 0;
-    g->Nodelist = malloc(sizeof(adjListNode) * noNodes);
+    g->nodeList = malloc(sizeof(adjListNode) * noNodes);
     // for each node it costs 0 to reach itself
     for (int i = 0; i < noNodes; i++) {
-        g->Nodelist[i] = newNode(i, 0);
+        g->nodeList[i] = newNode(i, 0);
     }
 
     /*  for testing we will fill the graph randomly */
@@ -34,6 +34,7 @@ Graph newGraph(int noNodes) {
             insertEdge(g, i, rand()%noNodes, rand()%50);
         }
     }
+
     return g;
 }
 
@@ -108,13 +109,13 @@ int numVerticies(Graph g) {
 AdjList outIncident(Graph g, Vertex v) { 
     // this one just returns the list of edges from a given v
     AdjList outward; 
-    AsjList checklist = g->nodeList[v]->next;
+    AdjList checklist = g->nodeList[v]->next;
     numnodes = 0;
     while (checklist != NULL) {
         numnodes++;
         checklist = checklist->next;
     }
-    AsjList checklist = g->nodeList[v]->next;
+    AdjList checklist = g->nodeList[v]->next;
     AdjList outward = malloc(sizeof(_adjListNode) * numnodes);
     outward = newNode(checklist->v,checklist->weight);
     curr = outward;
