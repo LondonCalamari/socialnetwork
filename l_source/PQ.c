@@ -36,7 +36,15 @@ void  addPQ(PQ, ItemPQ) {
 //Removes and returns the item (ItemPQ) with smallest 'value'. Returns null if this queue is empty.
 ItemPQ  dequeuePQ(PQ) {
     if (PQ == NULL) { return NULL; }
-
+    if (PQ->nodes == NULL || PQ->len == 0) { return NULL; }
+    int smallest_node = PQ->nodes[0]->value;
+    for (int i = 0; i < PQ->len; i++) {
+        if (PQ->nodes[i]->value < PQ->nodes[smallest_node]->value) {
+            smallest_node = i;
+        }
+    } 
+    /// NEEDS TO NOW REMOVE THE ITEM
+    return PQ->nodes[smallest_node];
 }
 
 // Updates item with a given 'key' value, by updating that item's value to the given 'value'.
