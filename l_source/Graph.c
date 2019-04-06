@@ -140,20 +140,27 @@ AdjList outIncident(Graph g, Vertex v) {
 
 // Retuns an AdjList of the vertices incoming to vertex V
 AdjList inIncident(Graph g, Vertex v) {
-    AdjList inward;
-    AdjList curr = g->nodeList[0];
+    AdjList inward = NULL;
+    //AdjList curr;
     int firstNodeFlag = 0;
 
     // Look through every nodeList in the graph for vertex V
     for (int i = 0; i < g->nV; i++) {
+        printf("1\n");
+        if (i == v) { printf("continue\n"); continue; }
+        AdjList curr = g->nodeList[i];
+        printf("after con\n");
         while (curr->next != NULL) {
             // if we find the node in the list we add it 
             if (curr->w == v) {
+                printf("2\n");
                 if (firstNodeFlag == 0) {
+                    printf("3\n");
                     inward = newNode(curr->w, curr->weight);
-                    inward->next->next = NULL;
+                    inward->next = NULL;
                     firstNodeFlag = 1;
-                } else {
+                } else {          
+                    printf("4\n");    
                     inward->next = newNode(curr->w, curr->weight);
                     inward->next->next = NULL;
                 }   
@@ -195,7 +202,6 @@ void  freeGraph(Graph g) {
 }
 
 
-
 // Main for testing purposes 
 int main(int argc, char *argv[]) {
 
@@ -215,6 +221,8 @@ int main(int argc, char *argv[]) {
     assert(adjacent(g, 1, 2) == true);
     insertEdge(g, 4, 1, 11);
     assert(adjacent(g, 4, 1) == true);
+    insertEdge(g, 19, 1, 1);
+    assert(adjacent(g, 19,1) == false);
   
     // Remove Edge tests
     removeEdge(g, 3, 2);
@@ -234,12 +242,12 @@ int main(int argc, char *argv[]) {
     }
     printf("NULL\n");
 
-
     // inIncident tests
     printf("--- inIncident test ---\n[0]: ");
     for (AdjList t2 = inIncident(g,0); t2 != NULL; t2 = t2->next) {
         printf ("<%d> ($%d) --> ", t2->w, t2->weight);
     }
+    printf("NULL\n");
 
     printf(" --- All tests passed ---\n");
 
