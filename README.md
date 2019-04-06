@@ -7,8 +7,8 @@ The main focus of this assignment is to read graph data from a given file, build
 - [x] removeEdge
 - [x] adjacent
 - [x] numVerticies
-- [ ] outIncident
-- [ ] inIncident
+- [x] outIncident
+- [x] inIncident
 - [x] showGraph
 - [x] freeGraph
 
