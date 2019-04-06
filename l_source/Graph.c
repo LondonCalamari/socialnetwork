@@ -9,13 +9,14 @@
 
 AdjList newNode(int v, int weight);
 
+// Graph struct
 typedef struct _GraphRep {
     int nV; // number of vertices
     int nE; // number of edges
     AdjList nodeList; // adjacency list
 } GraphRep;
 
-// Graph struct
+// creates new graph
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
     Graph g = malloc(sizeof(GraphRep));
@@ -198,6 +199,7 @@ void  showGraph(Graph g) {
     }
 }
 
+// free's the graph
 void  freeGraph(Graph g) {
     // free all the nodes in the nodeList
     for (int i = 0; i < g->nV; i++) {
