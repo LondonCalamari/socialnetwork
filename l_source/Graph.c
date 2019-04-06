@@ -10,15 +10,17 @@
 AdjList newNode(int v, int weight);
 
 typedef struct _GraphRep {
-   int nV; // number of vertices
-   int nE; // number of edges
-   AdjList nodeList;
+    int nV; // number of vertices
+    int nE; // number of edges
+    AdjList nodeList; // adjacency list
 } GraphRep;
 
 // Graph struct
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
     Graph g = malloc(sizeof(GraphRep));
+    if (g == NULL) { return NULL; }
+
     g->nV = noNodes;
     g->nE = 0;
     g->nodeList = malloc(sizeof(adjListNode) * noNodes);
@@ -72,15 +74,26 @@ void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 }
 
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
+    // first check if the edge exists or not
     if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return;
     }
+
+    // if it does exist, remove it
     AdjList prev = g->Nodelist[src];
     AdjList curr = prev->next;
     while (curr != NULL) {
         if (curr->w == dest) {
-            prev->next = curr->next;
-            free(curr);
+            // if it is the last node we just remove it
+            if (curr->next == NULL) {
+                prev->next = NULL;
+                free(curr);
+                break;
+            } else {
+                prev->next = curr->next;
+                free(curr);
+                break;
+            }
         }
         prev = curr;
         curr = curr->next;
@@ -93,7 +106,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
     }
     AdjList curr = g->Nodelist[src]; 
     while (curr != NULL) {
-        if ( curr->w == dest) {
+        if (curr->w == dest) {
             return true;
         }   
         curr = curr->next;
@@ -106,9 +119,10 @@ int numVerticies(Graph g) {
     return g->nV;
 }
 
+/*
 AdjList outIncident(Graph g, Vertex v) { 
     // this one just returns the list of edges from a given v
-    AdjList outward; 
+    AdjList outward;
     AdjList checklist = g->nodeList[v]->next;
     numnodes = 0;
     while (checklist != NULL) {
@@ -126,10 +140,47 @@ AdjList outIncident(Graph g, Vertex v) {
     }
     return outward;
 }
+*/
 
+// Returns an AdjList of the vertices outgoing from vertex V
+AdjList outIncident(Graph g, Vertex v) {
+    // add the first vertex in the list to outward
+    AdjList outward = newNode(g->nodeList[v]->next->w, g->nodeList[v]->next->weight);
+    AdjList curr = g->nodeList[v]->next;
+
+    // add every vertex in the curr list
+    while (curr->next != NULL) {
+        outward->next = newNode(curr->w, curr->weight);
+        outward->next->next = NULL;
+        curr = curr->next;
+    }
+    return outward;
+}
+
+// Retuns an AdjList of the vertices incoming to vertex V
 AdjList inIncident(Graph g, Vertex v) {
-    // this ones returns the list of edges going into the vertex 
-    // will have to check all nodes and return list of edges
+    AdjList inward;
+    AdjList curr = g->nodeList[0];
+    int firstNodeFlag = 0;
+
+    // Look through every nodeList in the graph for vertex V
+    for (int i = 0; i < g->nV; i++) {
+        while (curr->next != NULL) {
+            // if we find the node in the list we add it 
+            if (curr->w == v) {
+                if (firstNodeFlag == 0) {
+                    inward = newNode(curr->w, curr->weight);
+                    inward->next->next = NULL;
+                    firstNodeFlag = 1;
+                } else {
+                    inward->next = newNode(curr->w, curr->weight);
+                    inward->next->next = NULL;
+                }   
+            }
+            curr = curr->next;
+        }
+    }
+    return inward;
 }
 
 // Prints the graph as the adjacency list
@@ -163,7 +214,7 @@ void  freeGraph(Graph g) {
 
 
 
-
+// Main for testing purposes 
 int main(int argc, char *argv[]) {
     printf("Enter nV: ");
     int nV;
