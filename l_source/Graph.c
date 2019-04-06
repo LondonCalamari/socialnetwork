@@ -13,7 +13,7 @@ AdjList newNode(int v, int weight);
 struct GraphRep {
     int nV; // number of vertices
     int nE; // number of edges
-    AdjList nodeList; // adjacency list
+    AdjList *nodeList; // adjacency list
 };
 
 // creates new graph
@@ -24,7 +24,7 @@ Graph newGraph(int noNodes) {
 
     g->nV = noNodes;
     g->nE = 0;
-    g->nodeList = malloc(sizeof(adjListNode) * noNodes);
+    g->nodeList = malloc(sizeof(AdjList) * noNodes);
     // for each node it costs 0 to reach itself
     for (int i = 0; i < noNodes; i++) {
         g->nodeList[i] = newNode(i, 0);
