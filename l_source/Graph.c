@@ -10,16 +10,16 @@
 AdjList newNode(int v, int weight);
 
 // Graph struct
-typedef struct _GraphRep {
+struct GraphRep {
     int nV; // number of vertices
     int nE; // number of edges
     AdjList nodeList; // adjacency list
-} GraphRep;
+};
 
 // creates new graph
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
-    Graph g = malloc(sizeof(GraphRep));
+    Graph g = malloc(sizeof(Graph));
     if (g == NULL) { return NULL; }
 
     g->nV = noNodes;
@@ -43,7 +43,7 @@ Graph newGraph(int noNodes) {
 
 // Creates a new adjListNode
 AdjList newNode(int v, int weight) {
-    AdjList node = malloc(sizeof(struct _adjListNode));
+    AdjList node = malloc(sizeof(AdjList));
     node->w = v;
     node->weight = weight;
     node->next = NULL;
@@ -81,7 +81,7 @@ void  removeEdge(Graph g, Vertex src, Vertex dest) {
     }
 
     // if it does exist, remove it
-    AdjList prev = g->Nodelist[src];
+    AdjList prev = g->nodeList[src];
     AdjList curr = prev->next;
     while (curr != NULL) {
         if (curr->w == dest) {
@@ -105,7 +105,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
     if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return false;
     }
-    AdjList curr = g->Nodelist[src]; 
+    AdjList curr = g->nodeList[src]; 
     while (curr != NULL) {
         if (curr->w == dest) {
             return true;
