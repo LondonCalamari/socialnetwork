@@ -15,6 +15,8 @@ typedef struct _PQRep {
 PQ newPQ() {
     PQ pq = malloc(sizeof(PQRep));
     if (pq == NULL) { return NULL; }
+    pq->len = 0;
+    pq->nodes = NULL;
     return pq;
 }
 
