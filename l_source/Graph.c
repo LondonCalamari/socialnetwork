@@ -146,22 +146,17 @@ AdjList inIncident(Graph g, Vertex v) {
 
     // Look through every nodeList in the graph for vertex V
     for (int i = 0; i < g->nV; i++) {
-        printf("1\n");
-        if (i == v) { printf("continue\n"); continue; }
+        if (i == v) { continue; }
         AdjList curr = g->nodeList[i];
-        printf("after con\n");
-        while (curr->next != NULL) {
+        while (curr != NULL) {
             // if we find the node in the list we add it 
             if (curr->w == v) {
-                printf("2\n");
                 if (firstNodeFlag == 0) {
-                    printf("3\n");
-                    inward = newNode(curr->w, curr->weight);
+                    inward = newNode(i, curr->weight);
                     inward->next = NULL;
                     firstNodeFlag = 1;
                 } else {          
-                    printf("4\n");    
-                    inward->next = newNode(curr->w, curr->weight);
+                    inward->next = newNode(i, curr->weight);
                     inward->next->next = NULL;
                 }   
             }
@@ -242,6 +237,7 @@ int main(int argc, char *argv[]) {
     }
     printf("NULL\n");
 
+    showGraph(g);
     // inIncident tests
     printf("--- inIncident test ---\n[0]: ");
     for (AdjList t2 = inIncident(g,0); t2 != NULL; t2 = t2->next) {
@@ -249,6 +245,11 @@ int main(int argc, char *argv[]) {
     }
     printf("NULL\n");
 
+    printf("[3]: ");
+    for (AdjList t2 = inIncident(g,3); t2 != NULL; t2 = t2->next) {
+        printf ("<%d> ($%d) --> ", t2->w, t2->weight);
+    }
+    printf("NULL\n");
     printf(" --- All tests passed ---\n");
 
     freeGraph(g);
