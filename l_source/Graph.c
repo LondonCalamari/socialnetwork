@@ -106,11 +106,29 @@ int numVerticies(Graph g) {
 }
 
 AdjList outIncident(Graph g, Vertex v) { 
-
+    // this one just returns the list of edges from a given v
+    AdjList outward; 
+    AsjList checklist = g->nodeList[v];
+    numnodes = 0;
+    while (checklist != NULL) {
+        numnodes++;
+        checklist = checklist->next;
+    }
+    AsjList checklist = g->nodeList[v]->next;
+    AdjList outward = malloc(sizeof(_adjListNode) * numnodes);
+    outward = newNode(checklist->v,checklist->weight);
+    curr = outward;
+    while (checklist != NULL) {
+        curr->next = newNode(checklist->v,checklist->weight);
+        checklist = checklist->next;
+        curr = curr->next;
+    }
+    return outward;
 }
 
 AdjList inIncident(Graph g, Vertex v) {
-
+    // this ones returns the list of edges going into the vertex 
+    // will have to check all nodes and return list of edges
 }
 
 // Prints the graph as the adjacency list
