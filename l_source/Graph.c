@@ -90,7 +90,7 @@ bool  adjacent(Graph g, Vertex src, Vertex dest) {
     if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return false;
     }
-    AdjList curr = g->Nodelist[src]; // not sure if -1 needed
+    AdjList curr = g->Nodelist[src]; 
     while (curr != NULL) {
         if ( curr->w == dest) {
             return true;
@@ -108,7 +108,7 @@ int numVerticies(Graph g) {
 AdjList outIncident(Graph g, Vertex v) { 
     // this one just returns the list of edges from a given v
     AdjList outward; 
-    AsjList checklist = g->nodeList[v];
+    AsjList checklist = g->nodeList[v]->next;
     numnodes = 0;
     while (checklist != NULL) {
         numnodes++;
