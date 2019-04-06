@@ -120,31 +120,9 @@ int numVerticies(Graph g) {
     return g->nV;
 }
 
-/*
-AdjList outIncident(Graph g, Vertex v) { 
-    // this one just returns the list of edges from a given v
-    AdjList outward;
-    AdjList checklist = g->nodeList[v]->next;
-    numnodes = 0;
-    while (checklist != NULL) {
-        numnodes++;
-        checklist = checklist->next;
-    }
-    AdjList checklist = g->nodeList[v]->next;
-    AdjList outward = malloc(sizeof(_adjListNode) * numnodes);
-    outward = newNode(checklist->v,checklist->weight);
-    curr = outward;
-    while (checklist != NULL) {
-        curr->next = newNode(checklist->v,checklist->weight);
-        checklist = checklist->next;
-        curr = curr->next;
-    }
-    return outward;
-}
-*/
-
 // Returns an AdjList of the vertices outgoing from vertex V
 AdjList outIncident(Graph g, Vertex v) {
+    /*
     // add the first vertex in the list to outward
     AdjList outward = newNode(g->nodeList[v]->next->w, g->nodeList[v]->next->weight);
     AdjList curr = g->nodeList[v]->next;
@@ -156,6 +134,8 @@ AdjList outIncident(Graph g, Vertex v) {
         curr = curr->next;
     }
     return outward;
+    */
+   return g->nodeList[v]->next;
 }
 
 // Retuns an AdjList of the vertices incoming to vertex V
@@ -190,7 +170,7 @@ void  showGraph(Graph g) {
     printf("The adjacency list is: \n");
     for (int i = 0; i < g->nV; i++) {
         AdjList curr = g->nodeList[i];
-        printf("[%d] : ", curr->w);
+        printf("[%d]: ", curr->w);
         while (curr != NULL) {
             printf ("<%d> ($%d) --> ", curr->w, curr->weight);
             curr = curr->next;
@@ -218,6 +198,8 @@ void  freeGraph(Graph g) {
 
 // Main for testing purposes 
 int main(int argc, char *argv[]) {
+
+    // Test with nV = 5 
     printf("Enter nV: ");
     int nV;
     scanf("%d", &nV);
@@ -225,6 +207,41 @@ int main(int argc, char *argv[]) {
     
     // Test Show graph
     showGraph(g);
+
+    // Insert Edge tests 
+    insertEdge(g, 3, 2, 11);
+    assert(adjacent(g, 3, 2) == true);
+    insertEdge(g, 1, 2, 19);
+    assert(adjacent(g, 1, 2) == true);
+    insertEdge(g, 4, 1, 11);
+    assert(adjacent(g, 4, 1) == true);
+  
+    // Remove Edge tests
+    removeEdge(g, 3, 2);
+    assert(adjacent(g, 3, 2) == false);
+    removeEdge(g, 4, 1);
+    assert(adjacent(g, 4, 1) == false);
+
+    // outIncident tests
+    printf("--- outIncident test ---\n[1]: ");
+    for (AdjList t1 = outIncident(g,1); t1 != NULL; t1 = t1->next) {
+        printf ("<%d> ($%d) --> ", t1->w, t1->weight);
+    }
+    printf("NULL\n");
+    printf("[2]: ");
+    for (AdjList t3 = outIncident(g,2); t3 != NULL; t3 = t3->next) {
+        printf ("<%d> ($%d) --> ", t3->w, t3->weight);
+    }
+    printf("NULL\n");
+
+
+    // inIncident tests
+    printf("--- inIncident test ---\n[0]: ");
+    for (AdjList t2 = inIncident(g,0); t2 != NULL; t2 = t2->next) {
+        printf ("<%d> ($%d) --> ", t2->w, t2->weight);
+    }
+
+    printf(" --- All tests passed ---\n");
 
     freeGraph(g);
     return EXIT_SUCCESS;
