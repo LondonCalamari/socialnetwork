@@ -41,4 +41,4 @@ The main focus of this assignment is to read graph data from a given file, build
 ### Style, Comments and Complexity: 20%
 - [x] Function names as functionName
 - [x] Variable names as variable_name
-- [x] Tabspace set to 3 spaces
+- [x] Tabspace set to 4 spaces
