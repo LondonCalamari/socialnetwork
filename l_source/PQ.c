@@ -23,29 +23,39 @@ PQ newPQ() {
 // Adds item (ItemPQ) to the priority queue. If an item with 'key' exists, it's 'value' is updated.
 void  addPQ(PQ, ItemPQ) {
     for (int i = 0; i < PQ->len; i++) {
-        if (PQ->nodes[i]->key = Item)
-
+        if (PQ->nodes[i]->key = ItemPQ->key) {
+            PQ->nodes[i]->value = ItemPQ->value;
+            return;
+        }
     } 
-
+    // just adds to the end of the queue not sure if this is efficent or not
+    PQ->nodes[i]->next = ItemPQ;
+    PQ->len++;
 }
 
 //Removes and returns the item (ItemPQ) with smallest 'value'. Returns null if this queue is empty.
 ItemPQ  dequeuePQ(PQ) {
-
+    if (PQ == NULL) { return NULL; }
 
 }
 
 // Updates item with a given 'key' value, by updating that item's value to the given 'value'.
 // If item with 'key' does not exist in the queue, no action is taken
 void  updatePQ(PQ, ItemPQ) {
-
-
+    for (int i = 0; i < PQ->len; i++) {
+        if (PQ->nodes[i]->key = ItemPQ->key) {
+            PQ->nodes[i]->value = ItemPQ->value;
+            return;
+        }
+    } 
 }
 
 // checks if PQ is empty
 int PQEmpty(PQ) {
-
-    return 1;
+    if (PQ == NULL) { return 1; }
+    if (PQ->len == 0) { return 1; }
+    if (PQ->nodes == NULL) { return 1; }
+    return 0;
 }
 
 // displays PQ
