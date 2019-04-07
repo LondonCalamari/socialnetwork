@@ -6,14 +6,14 @@
 #include <assert.h>
 #include <stdbool.h>
 
-typedef struct _PQRep {
+struct PQRep {
     ItemPQ *nodes;
     int len;
-} PQRep;
+};
 
 // Creates new priority queue, that can store items of type ItemPQ.
 PQ newPQ() {
-    PQ pq = malloc(sizeof(PQRep));
+    PQ pq = malloc(sizeof(PQ));
     if (pq == NULL) { return NULL; }
     pq->len = 0;
     pq->nodes = NULL;
@@ -21,48 +21,58 @@ PQ newPQ() {
 }
 
 // Adds item (ItemPQ) to the priority queue. If an item with 'key' exists, it's 'value' is updated.
-void  addPQ(PQ, ItemPQ) {
-    for (int i = 0; i < PQ->len; i++) {
-        if (PQ->nodes[i]->key = ItemPQ->key) {
-            PQ->nodes[i]->value = ItemPQ->value;
+void  addPQ(PQ pq, ItemPQ item) {
+    // if same key exists, update the value
+    for (int i = 0; i < pq->len; i++) {
+        if (pq->nodes[i].key = item.key) {
+            pq->nodes[i].value = item.value;
             return;
         }
+        // find where in the pq we want to add
+        if (pq->nodes[i].key > item.key) {
+            pq->len++;
+            pq->nodes = realloc(pq->nodes, pq->len * sizeof(ItemPQ));
+            
+            for (int j = i; j < len; j++) {
+                pq->nodes[len-1] = pq->nodes[len-2];
+            }
+            pq->nodes[i] = item;
+        }
     } 
-    // just adds to the end of the queue not sure if this is efficent or not
-    PQ->nodes[i]->next = ItemPQ;
-    PQ->len++;
+    pq->nodes[len-1]->next = item;
+    pq->len++;
 }
 
 //Removes and returns the item (ItemPQ) with smallest 'value'. Returns null if this queue is empty.
-ItemPQ  dequeuePQ(PQ) {
-    if (PQ == NULL) { return NULL; }
-    if (PQ->nodes == NULL || PQ->len == 0) { return NULL; }
-    int smallest_node = PQ->nodes[0]->value;
-    for (int i = 0; i < PQ->len; i++) {
-        if (PQ->nodes[i]->value < PQ->nodes[smallest_node]->value) {
+ItemPQ  dequeuePQ(PQ pq) {
+    if (pq == NULL) { return NULL; }
+    if (pq->nodes == NULL || pq->len == 0) { return NULL; }
+    int smallest_node = pq->nodes[0].value;
+    for (int i = 0; i < pq->len; i++) {
+        if (pq->nodes[i].value < pq->nodes[smallest_node].value) {
             smallest_node = i;
         }
     } 
     /// NEEDS TO NOW REMOVE THE ITEM
-    return PQ->nodes[smallest_node];
+    return pq->nodes[smallest_node];
 }
 
 // Updates item with a given 'key' value, by updating that item's value to the given 'value'.
 // If item with 'key' does not exist in the queue, no action is taken
-void  updatePQ(PQ, ItemPQ) {
-    for (int i = 0; i < PQ->len; i++) {
-        if (PQ->nodes[i]->key = ItemPQ->key) {
-            PQ->nodes[i]->value = ItemPQ->value;
+void  updatePQ(PQ pq, ItemPQ item) {
+    for (int i = 0; i < pq->len; i++) {
+        if (pq->nodes[i].key = item.key) {
+            pq->nodes[i].value =item.value;
             return;
         }
     } 
 }
 
 // checks if PQ is empty
-int PQEmpty(PQ) {
-    if (PQ == NULL) { return 1; }
-    if (PQ->len == 0) { return 1; }
-    if (PQ->nodes == NULL) { return 1; }
+int PQEmpty(PQ pq) {
+    if (pq == NULL) { return 1; }
+    if (pq->len == 0) { return 1; }
+    if (pq->nodes == NULL) { return 1; }
     return 0;
 }
 
