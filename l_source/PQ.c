@@ -8,7 +8,7 @@
 
 struct PQRep {
     ItemPQ *nodes;
-    int len;
+    int size;
 };
 
 // Creates new priority queue, that can store items of type ItemPQ.
