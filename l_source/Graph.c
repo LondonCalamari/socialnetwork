@@ -155,7 +155,7 @@ AdjList inIncident(Graph g, Vertex v) {
     AdjList inward = NULL;
     //AdjList curr;
     int firstNodeFlag = 0;
-
+    // Can't we jsut use if i = 0; ???
     // Look through every nodeList in the graph for vertex V
     for (int i = 0; i < g->nV; i++) {
         if (i == v) { continue; }
