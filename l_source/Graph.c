@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
-AdjList newNode(int v, int weight);
+AdjList createNode(int v, int weight);
 
 // Graph struct
 struct GraphRep {
@@ -27,22 +27,23 @@ Graph newGraph(int noNodes) {
     g->nodeList = malloc(sizeof(AdjList) * noNodes);
     // for each node it costs 0 to reach itself
     for (int i = 0; i < noNodes; i++) {
-        g->nodeList[i] = newNode(i, 0);
+        g->nodeList[i] = createNode(i, 0);
     }
 
-    /*  for testing we will fill the graph randomly */
+/*
+    /-  for testing we will fill the graph randomly -/
     for (int i = 0; i < noNodes; i++) {
         int r = rand()%(noNodes*2);
         for (int j = 0; j < r; j++) {
             insertEdge(g, i, rand()%noNodes, rand()%50);
         }
     }
-
+*/
     return g;
 }
 
 // Creates a new adjListNode
-AdjList newNode(int v, int weight) {
+AdjList createNode(int v, int weight) {
     AdjList node = malloc(sizeof(AdjList));
     node->w = v;
     node->weight = weight;
@@ -53,23 +54,34 @@ AdjList newNode(int v, int weight) {
 // insert edge in increasing order of cost 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     // first check if the edge isn't already in g
+ // printf("passing in src = %d, dest = %d, weight = %d\n", src, dest, weight);
     if (g->nV < src || src < 0 || g->nV < dest || dest < 0) { return; }
+  
     if (adjacent(g, src, dest)) { return; }
     else {
         // adding the node to the end of the list
         if (g->nodeList[src]->next == NULL) {
-            g->nodeList[src]->next = newNode(dest, weight);
+            g->nodeList[src]->next = createNode(dest, weight);
+            g->nodeList[src]->next->next = NULL;
+
         } else {
             // adding the node in order of cost
-            AdjList prev = g->nodeList[src];
-            AdjList curr = prev->next;
-            while (curr != NULL && curr->weight < weight) {
+            AdjList prev; //= g->nodeList[src];
+            AdjList curr = g->nodeList[src]; //prev->next;
+            while (curr != NULL && curr->weight <= weight) {
+                prev = curr;
                 curr = curr->next;     
             }
-            AdjList new = newNode(dest, weight);
-            prev->next = new;
+          //  printf("here 4\n");
+            AdjList new = createNode(dest, weight);
             new->next = curr;
+            prev->next = new;
+
+            //prev->next = new;
+            //new->next = curr;
         }
+        
+        
         g->nE++;
     }
 }
@@ -124,12 +136,12 @@ int numVerticies(Graph g) {
 AdjList outIncident(Graph g, Vertex v) {
     /*
     // add the first vertex in the list to outward
-    AdjList outward = newNode(g->nodeList[v]->next->w, g->nodeList[v]->next->weight);
+    AdjList outward = createNode(g->nodeList[v]->next->w, g->nodeList[v]->next->weight);
     AdjList curr = g->nodeList[v]->next;
 
     // add every vertex in the curr list
     while (curr->next != NULL) {
-        outward->next = newNode(curr->w, curr->weight);
+        outward->next = createNode(curr->w, curr->weight);
         outward->next->next = NULL;
         curr = curr->next;
     }
@@ -152,11 +164,11 @@ AdjList inIncident(Graph g, Vertex v) {
             // if we find the node in the list we add it 
             if (curr->w == v) {
                 if (firstNodeFlag == 0) {
-                    inward = newNode(i, curr->weight);
+                    inward = createNode(i, curr->weight);
                     inward->next = NULL;
                     firstNodeFlag = 1;
                 } else {          
-                    inward->next = newNode(i, curr->weight);
+                    inward->next = createNode(i, curr->weight);
                     inward->next->next = NULL;
                 }   
             }
@@ -196,9 +208,40 @@ void  freeGraph(Graph g) {
     free(g);
 }
 
+/*
 
 // Main for testing purposes 
 int main(int argc, char *argv[]) {
+    Graph g = newGraph(10);
+	insertEdge(g,0,1,2);
+	insertEdge(g,0,2,5);
+    insertEdge(g,0,3,4);
+    insertEdge(g,0,4,7);
+    insertEdge(g,0,5,8);
+    insertEdge(g,0,6,6);
+    insertEdge(g,0,7,2);
+    insertEdge(g,0,8,6);
+    insertEdge(g,0,9,2);
+    showGraph(g);
+
+
+	insertEdge(g,0,3,1);
+	insertEdge(g,1,4,1);
+	insertEdge(g,0,5,7);
+	insertEdge(g,1,6,2);
+	insertEdge(g,0,7,100);
+	insertEdge(g,2,8,3);
+	insertEdge(g,0,9,9);
+	insertEdge(g,9,0,11);
+	insertEdge(g,5,1,6);
+	insertEdge(g,9,4,2);
+	insertEdge(g,3,8,4);
+	insertEdge(g,8,1,8);
+	insertEdge(g,1,3,4);
+	insertEdge(g,7,5,2);
+	insertEdge(g,7,2,6);
+
+    showGraph(g);
 
     // Test with nV = 5 
     printf("Enter nV: ");
@@ -252,6 +295,11 @@ int main(int argc, char *argv[]) {
     printf("NULL\n");
     printf(" --- All tests passed ---\n");
 
+
     freeGraph(g);
     return EXIT_SUCCESS;
+
+
 }
+
+*/
