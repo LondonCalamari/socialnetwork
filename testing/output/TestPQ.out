@@ -1,0 +1,28 @@
+
+addPQ: {1,100}
+addPQ: {2,15}
+addPQ: {3,1}
+addPQ: {4,4}
+addPQ: {5,3}
+in
+wtf
+[0](0)->[X]
+Dequeued: {0,0}
+Dequeued: {0,0}
+Dequeued: {0,0}
+Dequeued: {0,0}
+Dequeued: {0,0}
+addPQ: {2,12}
+addPQ: {4,8}
+addPQ: {3,10}
+in
+wtf
+[0](0)->[X]
+Update {4,8} to {4,11}
+Dequeued: {0,0}
+Dequeued: {0,0}
+Dequeued: {0,0}
+in
+wtf
+[0](0)->[X]
+
