@@ -53,7 +53,8 @@ void  addPQ(PQ pq, ItemPQ item) {
 
     // Insert in order (smallest at the front of the q)
     // this is the just the basic implementation 
-    for (int i = 0; i < pq->nitems; i++) {
+    int i;
+    for (i = 0; i < pq->nitems; i++) {
         if (pq->nodes[i].value > item.value) {
             // shuffle all the items down the array
             for (int curr = pq->nitems - 1; curr >= i; curr--) {
@@ -62,8 +63,11 @@ void  addPQ(PQ pq, ItemPQ item) {
             pq->nodes[i] = item;
             pq->nitems++;
             return;
-        }
+        } 
     }
+    pq->nodes[i] = item;
+    pq->nitems++;
+    return;
 
 /*
     // Insert the item into last place
@@ -177,12 +181,13 @@ ItemPQ newItemPQ(int a, int b){
 // Main for testing
 int main (int argc, char *argv[]) {
     PQ pq = newPQ();
-    addPQ(pq,newItemPQ(6,34));
+
     addPQ(pq,newItemPQ(5,15));
     addPQ(pq,newItemPQ(3,11));
     addPQ(pq,newItemPQ(2,3));
 
     addPQ(pq,newItemPQ(7,24)); 
+        addPQ(pq,newItemPQ(6,34));
     showPQ(pq);
 
     freePQ(pq);
