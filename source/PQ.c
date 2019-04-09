@@ -19,7 +19,7 @@ PQ newPQ() {
     PQ pq = malloc(sizeof(PQ));
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
-    pq->size = 0;
+    pq->size = 1;
     pq->nodes = malloc(sizeof(ItemPQ));
     return pq;
 }
@@ -33,7 +33,7 @@ void  addPQ(PQ pq, ItemPQ item) {
      
     // Make sure our array has enough space
     if (pq->nitems + 1 >= pq->size) {
-        pq->size = (pq->size + 1) * 2;
+        pq->size = (pq->size) * 2;
         pq->nodes = realloc(pq->nodes, pq->size * sizeof(ItemPQ));
     }
   
@@ -159,11 +159,9 @@ void  showPQ(PQ pq) {
 
 // free's PQ
 void  freePQ(PQ pq) {
-    /*
     for (int i = 0; i < pq->nitems; i++) {
-        free(pq->nodes[i]);
+        free(&pq->nodes[i]);
     }
-    */
     free(pq->nodes);
     free(pq);
 }
