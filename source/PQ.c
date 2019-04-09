@@ -164,11 +164,30 @@ void  freePQ(PQ pq) {
     free(pq);
 }
 
-/*
+
+ItemPQ newItemPQ(int a, int b){
+
+  ItemPQ *p = malloc(sizeof(struct ItemPQ)) ;
+  p->key = a;
+  p->value = b;
+  
+  return *p;
+}
+
 // Main for testing
 int main (int argc, char *argv[]) {
+    PQ pq = newPQ();
+    addPQ(pq,newItemPQ(6,34));
+    addPQ(pq,newItemPQ(5,15));
+    addPQ(pq,newItemPQ(3,11));
+    addPQ(pq,newItemPQ(2,3));
+
+    addPQ(pq,newItemPQ(7,24)); 
+    showPQ(pq);
+
+    freePQ(pq);
     printf("Complete\n");
     return EXIT_SUCCESS;
 }
 
-*/
+
