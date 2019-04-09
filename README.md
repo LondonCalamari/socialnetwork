@@ -13,13 +13,13 @@ The main focus of this assignment is to read graph data from a given file, build
 - [x] freeGraph
 
 ### Part 2: Dijkstra's algorithm, PQ (8%), Dijkstra (15%)
-- [ ] newPQ
-- [ ] addPQ
-- [ ] dequeuePQ
-- [ ] updatePQ
-- [ ] PQEmpty
-- [ ] showPQ
-- [ ] freePQ
+- [x] newPQ
+- [x] addPQ
+- [x] dequeuePQ
+- [x] updatePQ
+- [x] PQEmpty
+- [x] showPQ
+- [x] freePQ
 - [ ] ShortestPaths dijkstra(Graph, Vertex)
 - [ ] showShortestPaths
 - [ ] freeShortestPaths
