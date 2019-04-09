@@ -27,12 +27,14 @@ int main(){
   printf("addPQ: {5,3}\n");  
   addPQ(pq,newItemPQ(5,3));
 
-  showPQ(pq);
+
+  //showPQ(pq);
   
   ItemPQ v; 
   for(int i=0; i<5; i++){  
       v = dequeuePQ(pq);
       printf("Dequeued: {%d,%d}\n",v.key,v.value);
+    //  showPQ(pq);
   }
 
   printf("addPQ: {2,12}\n");  
@@ -42,14 +44,18 @@ int main(){
   printf("addPQ: {3,10}\n");  
   addPQ(pq,newItemPQ(3,10));
   
-  showPQ(pq);
+ // showPQ(pq);
   
   printf("Update {4,8} to {4,11}\n");
   updatePQ(pq, newItemPQ(4,11)) ;
   
+  //showPQ(pq);
+
+
   for(int i=0; i<3; i++){  
       v = dequeuePQ(pq);
       printf("Dequeued: {%d,%d}\n",v.key,v.value);
+      //showPQ(pq);
   }  
   
   showPQ(pq);

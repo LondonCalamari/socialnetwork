@@ -20,7 +20,7 @@ PQ newPQ() {
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
     pq->size = 0;
-    pq->nodes = NULL;
+    pq->nodes = malloc(sizeof(ItemPQ));
     return pq;
 }
 
@@ -29,16 +29,26 @@ void  addPQ(PQ pq, ItemPQ item) {
     // go through to see if item with key exists, update if it does
     // im so confused because this is the only way to do this in a heap but it
     // essentially makes our heap pointless as it makes the complexity worse
+     
+     
+    // Make sure our array has enough space
+    if (pq->nitems + 1 >= pq->size) {
+        pq->size = (pq->size + 1) * 2;
+        pq->nodes = realloc(pq->nodes, pq->size * sizeof(ItemPQ));
+    }
+  
     for (int i = 1; i <= pq->nitems; i++) {
         if (pq->nodes[i].key == item.key) {
             pq->nodes[i].value = item.value;
             return;
         }
     }
-    // Make sure our array has enough space
-    if (pq->nitems + 1 >= pq->size) {
-        pq->size = pq->size * 2;
-        pq->nodes = realloc(pq->nodes, pq->size * sizeof(ItemPQ));
+
+    // adding the first item
+    if (pq->nitems == 0) {
+        pq->nodes[0] = item;
+        pq->nitems++;
+        return;
     }
 
     // Insert in order (smallest at the front of the q)
@@ -51,7 +61,6 @@ void  addPQ(PQ pq, ItemPQ item) {
             }
             pq->nodes[i] = item;
             pq->nitems++;
-            printf("adding node\n");
             return;
         }
     }
@@ -95,24 +104,18 @@ ItemPQ  dequeuePQ(PQ pq) {
     return minItem;
     */
 
-
  //  if (pq == NULL) { printf("wtf\n");ItemPQ *null = NULL; return null; }
  //  if (pq->nodes == NULL || pq->nitems == 0) { ItemPQ *null = NULL; return null; }
     
    // how tf are we meant to return NULL if the function has to return an ITEMPQ (ie not a pointer)
 
-    int smallest_node = pq->nodes[0].value;
-    for (int i = 0; i < pq->nitems; i++) {
-        if (pq->nodes[i].value < pq->nodes[smallest_node].value) {
-            smallest_node = i;
-        }
-    } 
-
-    ItemPQ smallest = pq->nodes[smallest_node];
+    assert(pq != NULL);
+    ItemPQ smallest = pq->nodes[0];
     // Shuffle everything up the array from the smallest node
-    for (int i = smallest_node; i < pq->nitems; i++) {
+    for (int i = 0; i < pq->nitems; i++) {
         pq->nodes[i] = pq->nodes[i+1];
     }
+    pq->nitems--;
     return smallest;
     
 }
@@ -123,6 +126,13 @@ void  updatePQ(PQ pq, ItemPQ item) {
     for (int i = 0; i < pq->nitems; i++) {
         if (pq->nodes[i].key == item.key) {
             pq->nodes[i].value = item.value;
+       
+            // remove the item and reinsert in correct position
+            for (int j = i; j < pq->nitems; j++ ) {
+                pq->nodes[j] = pq->nodes[j+1];
+            }
+            pq->nitems--;
+            addPQ(pq, item);
             return;
         }
     } 
@@ -137,12 +147,10 @@ int PQEmpty(PQ pq) {
 
 // displays PQ
 void  showPQ(PQ pq) {
-    printf("in\n");
-    for (int i = 0; i <= pq->nitems; i++) {
-        printf("wtf\n");
-        printf("[%d](%d)->", pq->nodes[i].value, pq->nodes[i].key);
+    for (int i = 0; i < pq->nitems; i++) {
+        printf("[%d](%d)->", pq->nodes[i].key, pq->nodes[i].value);
     }
-    printf("[X]\n");
+   // printf("[X]\n");
 }
 
 // free's PQ
