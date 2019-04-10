@@ -8,80 +8,112 @@
 #define INF 999999
 
 static PredNode newPredNode(int vert);
-static PredNode appendNode(PredNode old[item], PredNode new);
+static void appendNode(PredNode base, PredNode new); 
+// static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
-    ShortestPaths s_paths = malloc(sizeof(ShortestPaths));
-    s_paths->dist = malloc(sizeof(int) * g->nV));
-    s_paths->pred = malloc(sizeof(PredNode) * g->nV);
-    s_paths->src = v;
-	s_paths->noNodes = g->nV; // is this it?
+    ShortestPaths paths = malloc(sizeof(ShortestPaths));
+    paths->dist = malloc(sizeof(int) * g->nV);
+    paths->pred = malloc(sizeof(PredNode) * g->nV);
+    paths->src = v;
+	paths->noNodes = g->nV; // is this it?
 
-    PQ pq = newPQ();
-    // initialise dist[] to all INF, pred[] to all -1, except dist[v] = 0;
+  
+    // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
     for (int i = 0; g->nV; i++) {
-        s_paths->dist[i] = INF; 
-        s_paths->pred[i] = -1;
+        paths->dist[i] = INF; 
+        paths->pred[i]->next = NULL;
     }
     // for each vertex attached the v add it into the pq
    
-    dist[v] = 0;
+    paths->dist[v] = 0;
+    PQ pq = newPQ();
     // add all vertices of v to pq
     AdjList curr = g->nodes[v]->next;
     while (curr != NULL) {
         ItemPQ new;
         new.key = curr->w;
         new.value = curr->weight;
-        s_paths->dist[new.key] = new.value;
-        addPQ(pq, first);
+        paths->dist[new.key] = new.value;
+        addPQ(pq, new);
         curr = curr->next;
     }
 
     while (!PQEmpty(pq)) {
-        item = dequeue(pq);
+        ItemPQ item = dequeuePQ(pq);
         AdjList adj = g->nodes[item->key];
     
 		// for each neighbour in AdjList adj (adjcent nodes)
 		while (adj != NULL) {
 			// int dest = adj->weight;
-			int new_dist = adj->weight + s_paths->dist[item->key];
+			int new_dist = adj->weight + paths->dist[item->key];
 
            	if (new_dist < item.weight) {
-               	s_paths->dist[adj] = new_dist;
-				newPred = newPredNode(adj->w);
-           		s_paths->pred[item] = appendNode(s_paths->pred[item], newPred); 
+               	paths->dist[adj] = new_dist;
+				PredNode newPred = newPredNode(adj->w);
+           		paths->pred[item] = appendNode(paths->pred[item], newPred); 
 				ItemPQ new;
-           		new.key = node->w;
-           		new.value = node->weight;
-				addPQ(new);
+           		new.key = adj->w; 
+           		new.value = adj->weight;
+				addPQ(pq, new);
            	}
            	adj = adj->next;
         }
    	}
-    return s_paths;
+    return paths;
 }
 
 // creates a new PreNode
 static PredNode newPredNode(int vert) {
-	new = malloc(sizeof(PredNode));
+	PredNode new = malloc(sizeof(PredNode));
 	new->v = vert;
 	new->next = NULL;
 	return new;
 }
 
+ static void appendNode(PredNode base, PredNode new) {
+     PredNode curr = base;
+     while (curr->next != NULL){
+         curr = curr->next;
+     }
+     curr->next = new;
+     curr->next->next = NULL;
+     return;
+
+ }
+
+/*
 // appends a PreNode to pred linked list
-static PredNode appendNode(PredNode old[item], PredNode new) {
+static PredNode appendNode(PredNode old, PredNode new, int item) {
 	if (old[item]->next == NULL) {
 		old[item]->next = new;
 		old[item]->next->next = NULL;
 		return old[item];
 	}
-	return appendNode(old[item]->next, new);
+	return appendNode(old[item]->next, new, item);
 }
-
+*/
 
 void showShortestPaths(ShortestPaths paths) {
-
+    int i = 0;
+        printf("Node %d\n", paths.src);
+        printf("  Distance\n");
+        for (i = 0; i < paths.noNodes; i++) {
+                if(i == paths.src)
+                printf("    %d : X\n",i);
+                else
+                    printf("    %d : %d\n",i,paths.dist[i]);
+        }
+        printf("  Preds\n");
+        for (i = 0; i < paths.noNodes; i++) {
+            printf("    %d : ",i);
+            PredNode* curr = paths.pred[i];
+            while(curr!=NULL) {
+                printf("[%d]->",curr->v);
+                curr = curr->next;
+            }
+            printf("NULL\n");
+        }
 }
 
 

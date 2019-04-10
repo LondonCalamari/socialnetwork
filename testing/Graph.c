@@ -152,10 +152,14 @@ AdjList outIncident(Graph g, Vertex v) {
 
 // Retuns an AdjList of the vertices incoming to vertex V
 AdjList inIncident(Graph g, Vertex v) {
-    AdjList inward = NULL;
+    //AdjList inward = malloc(sizeof(AdjList));
+  //  inward = NULL;
+   // inward->next = NULL;
     //AdjList curr;
+    AdjList inward = malloc(sizeof(AdjList)); //createNode(9999,9999);
+    inward = NULL;
     int firstNodeFlag = 0;
-
+    // Can't we jsut use if i = 0; ???
     // Look through every nodeList in the graph for vertex V
     for (int i = 0; i < g->nV; i++) {
         if (i == v) { continue; }
@@ -164,12 +168,16 @@ AdjList inIncident(Graph g, Vertex v) {
             // if we find the node in the list we add it 
             if (curr->w == v) {
                 if (firstNodeFlag == 0) {
+                    firstNodeFlag = 1;
                     inward = createNode(i, curr->weight);
                     inward->next = NULL;
-                    firstNodeFlag = 1;
-                } else {          
-                    inward->next = createNode(i, curr->weight);
-                    inward->next->next = NULL;
+                } else {       
+                    AdjList curr = inward;
+                    while (curr->next != NULL){
+                        curr = curr->next;
+                    }   
+                    curr->next = createNode(i, curr->weight);
+                    curr->next->next = NULL;
                 }   
             }
             curr = curr->next;
@@ -222,7 +230,22 @@ int main(int argc, char *argv[]) {
     insertEdge(g,0,7,2);
     insertEdge(g,0,8,6);
     insertEdge(g,0,9,2);
+
+    insertEdge(g,2,1,3);
+    insertEdge(g,3,1,3);
+    insertEdge(g,4,1,3);
+    insertEdge(g,5,1,3);
+    insertEdge(g,6,1,3);
+
     showGraph(g);
+
+    AdjList curr =  inIncident(g, 1);
+    while (curr->next != NULL) {
+        printf("[%d]->", curr->w);
+        curr = curr->next;
+    }
+    printf("NULL\n");
+
 
 
 	insertEdge(g,0,3,1);
@@ -240,6 +263,7 @@ int main(int argc, char *argv[]) {
 	insertEdge(g,1,3,4);
 	insertEdge(g,7,5,2);
 	insertEdge(g,7,2,6);
+
 
     showGraph(g);
 
@@ -298,8 +322,7 @@ int main(int argc, char *argv[]) {
 
     freeGraph(g);
     return EXIT_SUCCESS;
-
-
 }
-
 */
+
+
