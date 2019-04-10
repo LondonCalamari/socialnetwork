@@ -118,7 +118,11 @@ void showShortestPaths(ShortestPaths paths) {
 
 
 void  freeShortestPaths(ShortestPaths paths) {
-
+    free(paths->dist);
+    for (int i =0; i < noNodes; i++) {
+        free(&pred[i]);
+    }
+    free(paths);
 }
 
 
