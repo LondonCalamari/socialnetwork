@@ -8,7 +8,7 @@
 #define INF 999999
 
 static PredNode * newPredNode(int vert);
-static void appendNode(PredNode base, PredNode new); 
+static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
@@ -48,7 +48,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	    // makes this the new path
                	paths.dist[adj->w] = new_dist;
 				PredNode * newPred = newPredNode(adj->w);
-           		paths.pred[item.key] = appendNode(paths.pred[item.key], newPred); 
+           		paths.pred[item.key] = appendNode(*(paths.pred[item.key]), newPred); 
 				ItemPQ new;
            		new.key = adj->w; 
            		new.value = adj->weight;
@@ -68,13 +68,12 @@ static PredNode * newPredNode(int vert) {
 	return new;
 }
 
-static void appendNode(PredNode base, PredNode new) {
-     PredNode curr = base;
-     while (curr->next != NULL){
-         curr = curr->next;
+static void appendNode(PredNode *base, PredNode *new) {
+     while (base->next != NULL){
+         base = base->next;
      }
-     curr->next = new;
-     curr->next->next = NULL;
+     base->next = new;
+     base->next->next = NULL;
      return;
 
  }
