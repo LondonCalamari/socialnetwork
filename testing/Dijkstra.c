@@ -7,43 +7,48 @@
 
 #define INF 999999
 
-static PredNode newPredNode(int vert);
+static PredNode * newPredNode(int vert);
 static void appendNode(PredNode base, PredNode new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
-    ShortestPaths paths = malloc(sizeof(ShortestPaths));
-    paths->dist = malloc(sizeof(int) * g->nV);
-    paths->pred = malloc(sizeof(PredNode) * g->nV);
-    paths->src = v;
-	paths->noNodes = g->nV; // is this it?
-
+    ShortestPaths paths;
+    paths.dist = malloc(sizeof(int) * g->nV);
+    paths.pred = malloc(sizeof(PredNode) * g->nV);
+    paths.src = v;
+	paths.noNodes = g->nV; // is this it?
+    PQ pq = newPQ();
   
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
     for (int i = 0; g->nV; i++) {
-        paths->dist[i] = INF; 
-        paths->pred[i]->next = NULL;
+        paths.dist[i] = INF; 
+        paths.pred[i]->next = NULL;
+    }
+    AdjList curr = g->nodelist[v]->next;
+    while (curr != NULL) {
         ItemPQ new;
-        new.key = g->nodelist[i]->w;
-        new.value = g->nodelist[i]->INF;
+        new.key = curr->w;
+        new.value = curr->weight;
+        addPQ(pq, new);
+        curr = curr->next;
     }
     // for each vertex attached the v add it into the pq
-    paths->dist[v] = 0;
-    PQ pq = newPQ();
+    paths.dist[v] = 0;
+    
     // add all vertices of v to pq
     while (!PQEmpty(pq)) {
         ItemPQ item = dequeuePQ(pq);
-        AdjList adj = g->nodes[item->key];
+        AdjList adj = g->nodes[item.key];
     
 		// for each neighbour in AdjList adj (adjcent nodes)
 		while (adj != NULL) {
 			// int dest = adj->weight;
-			int new_dist = adj->weight + paths->dist[item->key];
-           	if (new_dist < paths->dist[adj->w]) {
+			int new_dist = adj->weight + paths.dist[item.key];
+           	if (new_dist < paths.dist[adj->w]) {
            	    // makes this the new path
-               	paths->dist[adj] = new_dist;
-				PredNode newPred = newPredNode(adj->w);
-           		paths->pred[item] = appendNode(paths->pred[item], newPred); 
+               	paths.dist[adj->w] = new_dist;
+				PredNode * newPred = newPredNode(adj->w);
+           		paths.pred[item.key] = appendNode(paths.pred[item.key], newPred); 
 				ItemPQ new;
            		new.key = adj->w; 
            		new.value = adj->weight;
@@ -56,14 +61,14 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 }
 
 // creates a new PreNode
-static PredNode newPredNode(int vert) {
-	PredNode new = malloc(sizeof(PredNode));
+static PredNode * newPredNode(int vert) {
+	PredNode * new = malloc(sizeof(PredNode));
 	new->v = vert;
 	new->next = NULL;
 	return new;
 }
 
- static void appendNode(PredNode base, PredNode new) {
+static void appendNode(PredNode base, PredNode new) {
      PredNode curr = base;
      while (curr->next != NULL){
          curr = curr->next;
@@ -110,11 +115,10 @@ void showShortestPaths(ShortestPaths paths) {
 
 
 void  freeShortestPaths(ShortestPaths paths) {
-    free(paths->dist);
-    for (int i =0; i < noNodes; i++) {
-        free(&pred[i]);
+    free(paths.dist);
+    for (int i =0; i < paths.noNodes; i++) {
+        free(&paths.pred[i]);
     }
-    free(paths);
 }
 
 
