@@ -23,23 +23,14 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     for (int i = 0; g->nV; i++) {
         paths->dist[i] = INF; 
         paths->pred[i]->next = NULL;
-    }
-    // for each vertex attached the v add it into the pq
-   
-    paths->dist[v] = 0;
-    PQ pq = newPQ();
-    // add all vertices of v to pq
-    /*
-    int i  = 0;
-    while (i < g->nV) {
         ItemPQ new;
         new.key = g->nodelist[i]->w;
         new.value = g->nodelist[i]->INF;
-        paths->dist[new.key] = new.value;
-        addPQ(pq, new);
-        curr = curr->next;
     }
-    */
+    // for each vertex attached the v add it into the pq
+    paths->dist[v] = 0;
+    PQ pq = newPQ();
+    // add all vertices of v to pq
     while (!PQEmpty(pq)) {
         ItemPQ item = dequeuePQ(pq);
         AdjList adj = g->nodes[item->key];
