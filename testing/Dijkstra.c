@@ -13,18 +13,18 @@ static void appendNode(PredNode *base, PredNode *new);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
     ShortestPaths paths;
-    paths.dist = malloc(sizeof(int) * g->nV);
-    paths.pred = malloc(sizeof(PredNode) * g->nV);
+    paths.dist = malloc(sizeof(int) * numVerticies(g));
+    paths.pred = malloc(sizeof(PredNode) * numVerticies(g));
     paths.src = v;
-	paths.noNodes = g->nV; // is this it?
+	paths.noNodes = numVerticies(g); // is this it?
     PQ pq = newPQ();
   
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
-    for (int i = 0; g->nV; i++) {
+    for (int i = 0; paths.noNodes; i++) {
         paths.dist[i] = INF; 
         paths.pred[i]->next = NULL;
     }
-    AdjList curr = g->nodelist[v]->next;
+    AdjList curr = outIncident(g, v);
     while (curr != NULL) {
         ItemPQ new;
         new.key = curr->w;
