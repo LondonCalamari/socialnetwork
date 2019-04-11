@@ -29,16 +29,17 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     paths->dist[v] = 0;
     PQ pq = newPQ();
     // add all vertices of v to pq
-    AdjList curr = g->nodes[v]->next;
-    while (curr != NULL) {
+    /*
+    int i  = 0;
+    while (i < g->nV) {
         ItemPQ new;
-        new.key = curr->w;
-        new.value = curr->weight;
+        new.key = g->nodelist[i]->w;
+        new.value = g->nodelist[i]->INF;
         paths->dist[new.key] = new.value;
         addPQ(pq, new);
         curr = curr->next;
     }
-
+    */
     while (!PQEmpty(pq)) {
         ItemPQ item = dequeuePQ(pq);
         AdjList adj = g->nodes[item->key];
@@ -47,8 +48,8 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		while (adj != NULL) {
 			// int dest = adj->weight;
 			int new_dist = adj->weight + paths->dist[item->key];
-
-           	if (new_dist < item.weight) {
+           	if (new_dist < paths->dist[adj->w]) {
+           	    // makes this the new path
                	paths->dist[adj] = new_dist;
 				PredNode newPred = newPredNode(adj->w);
            		paths->pred[item] = appendNode(paths->pred[item], newPred); 
