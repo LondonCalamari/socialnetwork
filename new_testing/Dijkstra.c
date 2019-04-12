@@ -18,12 +18,25 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     paths.src = v;
 	paths.noNodes = numVerticies(g); // is this it?
     PQ pq = newPQ();
-  
+    printf("in function]n");
+    // add all nodes to the q
+    for (int i = 0; i < numVerticies(g); i++) {
+        AdjList curr = outIncident(g, i);
+        while (curr != NULL) {
+            ItemPQ new; 
+            new.key = curr->w;
+            new.value = curr->weight;
+            addPQ(pq, new);
+            curr = curr->next;
+        }
+    }
+
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
-    for (int i = 0; paths.noNodes; i++) {
+    for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
         paths.pred[i]->next = NULL;
     }
+    /*
     AdjList curr = outIncident(g, v);
     while (curr != NULL) {
         ItemPQ new;
@@ -31,7 +44,9 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         new.value = curr->weight;
         addPQ(pq, new);
         curr = curr->next;
-    }
+    }*/
+
+
     // for each vertex attached the v add it into the pq
     paths.dist[v] = 0;
     
@@ -41,7 +56,8 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         AdjList adj = outIncident(g,item.key);
     
 		// for each neighbour in AdjList adj (adjcent nodes)
-		while (adj != NULL) {
+		// already ordered from smallest weight
+        while (adj != NULL) {
             printf("here\n");
 			// int dest = adj->weight;
 			int new_dist = adj->weight + paths.dist[item.key];
