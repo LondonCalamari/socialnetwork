@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define INF 9999
+
+// Contains number of out going edges from every vertice 
 NodeValues outDegreeCentrality(Graph g){
 	NodeValues outDegree;
     outDegree.noNodes = numVerticies(g);
@@ -26,6 +29,7 @@ NodeValues outDegreeCentrality(Graph g){
 	return outDegree;
 }
 
+// Contains number of in coming edges from every vertice
 NodeValues inDegreeCentrality(Graph g){
 	NodeValues inDegree;
     inDegree.noNodes = numVerticies(g);
@@ -45,6 +49,8 @@ NodeValues inDegreeCentrality(Graph g){
     }
 	return inDegree; 
 }
+
+// Contains number of out going and in coming edges from every vertice
 NodeValues degreeCentrality(Graph g) {
 	NodeValues degree;
     degree.noNodes = numVerticies(g);
@@ -61,21 +67,50 @@ NodeValues degreeCentrality(Graph g) {
 	return degree;
 }
 
+// Contains the 'closeness' of each node to every other node
 NodeValues closenessCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues close;
+    close.noNodes = numVerticies(g);
+    close.values = malloc(sizeof(double) * close.noNodes);
+
+    for (int i = 0; i < close.noNodes; i++) {
+        ShortestPaths paths = dijkstra(g, i);
+
+        // find the number of reachable nodes
+        double reachable = 0;
+        for (int k = 0; k < close.noNodes; i++) {
+            if (paths.dist[i] != INF) { reachable++; }
+        }
+
+        // sum all the shortest distances for reachable nodes
+        double sum = 0;
+        for (int j = 0; j < paths.noNodes; j++) {
+            if (paths.dist[j] == INF) { continue; }
+            sum += paths.dist[j];
+        }
+       
+        // apply Wasserman and Faust formula
+        double closeness = ((reachable-1)/(close.noNodes-1))*((reachable-1)/(sum));
+        
+        close.values[i] = closeness;
+    }
+
+	return close;
 }
 
+//
 NodeValues betweennessCentrality(Graph g){
 	NodeValues throwAway = {0};
 	return throwAway;
 }
 
+//
 NodeValues betweennessCentralityNormalised(Graph g){
 	NodeValues throwAway = {0};
 	return throwAway;
 }
 
+//
 void showNodeValues(NodeValues values){
     //printf("values.noNodes is %d\n", values.noNodes);
     for (int i = 0; i < values.noNodes; i++) {
@@ -83,6 +118,17 @@ void showNodeValues(NodeValues values){
     }
 }
 
+//
 void freeNodeValues(NodeValues values){
     free(values.values);
 }
+
+
+
+
+
+
+
+
+
+

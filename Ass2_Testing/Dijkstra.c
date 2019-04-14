@@ -14,19 +14,21 @@ static PredNode * newPredNode(int vert);
 ShortestPaths dijkstra(Graph g, Vertex v) {
     printf("in func\n");
     ShortestPaths paths;
-	printf("start of func");
-	paths.noNodes = numVerticies(g); // is this it?
+    printf("start of func");
+    paths.noNodes = numVerticies(g); // is this it?
     paths.src = v;
     paths.dist = malloc(sizeof(int) * numVerticies(g));
     assert(paths.dist != NULL);
-    paths.pred = malloc(sizeof(PredNode*) * numVerticies(g));
+    paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
+
     PQ pq = newPQ();
     printf("in function]n");
     // add all nodes to the q
     for (int i = 0; i < numVerticies(g); i++) {
         AdjList curr = outIncident(g, i);
         while (curr != NULL) {
+
             ItemPQ new; 
             new.key = curr->w;
             new.value = curr->weight;
