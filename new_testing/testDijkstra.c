@@ -42,14 +42,18 @@ Graph readGraph(char* file) {
 	}
 	fclose(f);
 
+    printf("maxVert is %d\n", maxVert);
 	Graph g = newGraph(maxVert+1);
+    printf("first g->nV = %d\n", numVerticies(g));
 	i = 0;
 	while(i < lines) {
+        printf("inserrting\n");
 		insertEdge(g,nums[i][0],nums[i][1],nums[i][2]);
 		i++;
 	}
 	for(i=0;i<lines;i++) free(nums[i]);
 	free(nums);
+    printf("g->nV = %d\n", numVerticies(g));
 	return g;
 }
 
