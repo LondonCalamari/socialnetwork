@@ -29,7 +29,10 @@ NodeValues outDegreeCentrality(Graph g){
 	return outDegree;
 }
 
+<<<<<<< HEAD
 // Contains number of in coming edges from every vertice
+=======
+>>>>>>> f9746b3e83e210e05a80bb8d672fb222db9c9313
 NodeValues inDegreeCentrality(Graph g){
 	NodeValues inDegree;
     inDegree.noNodes = numVerticies(g);

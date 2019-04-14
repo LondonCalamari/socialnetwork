@@ -21,14 +21,12 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     assert(paths.dist != NULL);
     paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
-
     PQ pq = newPQ();
     printf("in function]n");
     // add all nodes to the q
     for (int i = 0; i < numVerticies(g); i++) {
         AdjList curr = outIncident(g, i);
         while (curr != NULL) {
-
             ItemPQ new; 
             new.key = curr->w;
             new.value = curr->weight;
@@ -121,7 +119,7 @@ static PredNode appendNode(PredNode old, PredNode new, int item) {
 		return old[item];
 	}
 	return appendNode(old[item]->next, new, item);
-}
+/
 */
 
 void showShortestPaths(ShortestPaths paths) {
@@ -145,7 +143,6 @@ void showShortestPaths(ShortestPaths paths) {
             printf("NULL\n");
         }
 }
-
 
 void  freeShortestPaths(ShortestPaths paths) {
     free(paths.dist);
