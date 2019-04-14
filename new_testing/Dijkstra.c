@@ -5,10 +5,10 @@
 #include <assert.h>
 #include <stdio.h>
 
-#define INF 999999
+#define INF 9999
 
 static PredNode * newPredNode(int vert);
-static void appendNode(PredNode *base, PredNode *new); 
+//static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
@@ -68,8 +68,16 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	if (new_dist < paths.dist[adj->w]) {
            	    // makes this the new path
                	paths.dist[adj->w] = new_dist;
-				PredNode * newPred = newPredNode(adj->w);
-           		appendNode(paths.pred[item.key], newPred); 
+				PredNode *newPred = newPredNode(adj->w);
+
+                // append the newPred 
+                PredNode *curr = paths.pred[item.key];
+                while (curr->next != NULL) {
+                    curr = curr->next;
+                }
+                curr->next = newPred;
+                curr->next->next = NULL;
+           		//appendNode(paths.pred[item.key], newPred); 
 				ItemPQ new;
            		new.key = adj->w; 
            		new.value = adj->weight;
@@ -90,6 +98,7 @@ static PredNode * newPredNode(int vert) {
 	return new;
 }
 
+/*
 static void appendNode(PredNode *base, PredNode *new) {
      while (base->next != NULL){
          base = base->next;
@@ -99,6 +108,7 @@ static void appendNode(PredNode *base, PredNode *new) {
      return;
 
  }
+*/
 
 /*
 // appends a PreNode to pred linked list
