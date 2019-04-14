@@ -7,22 +7,21 @@
 
 #define INF 9999
 
-static PredNode * newPredNode(int vert);
+static PredNode *newPredNode(int vert);
 //static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
     printf("in func\n");
     ShortestPaths paths;
-    printf("start of func");
     paths.noNodes = numVerticies(g); // is this it?
     paths.src = v;
     paths.dist = malloc(sizeof(int) * numVerticies(g));
     assert(paths.dist != NULL);
     paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
+
     PQ pq = newPQ();
-    printf("in function]n");
     // add all nodes to the q
     for (int i = 0; i < numVerticies(g); i++) {
         AdjList curr = outIncident(g, i);
@@ -38,8 +37,10 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
     for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
+        paths.pred[i] = newPredNode(-1); // this first node needs to be null but idk how to do that atm
         paths.pred[i]->next = NULL;
     }
+
     /*
     AdjList curr = outIncident(g, v);
     while (curr != NULL) {
@@ -62,7 +63,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		// for each neighbour in AdjList adj (adjcent nodes)
 		// already ordered from smallest weight
         while (adj != NULL) {
-            printf("here\n");
 			// int dest = adj->weight;
 			int new_dist = adj->weight + paths.dist[item.key];
            	if (new_dist < paths.dist[adj->w]) {
@@ -86,9 +86,10 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	adj = adj->next;
         }
    	}
-    showShortestPaths(paths);
+    //showShortestPaths(paths);
     return paths;
 }
+
 
 // creates a new PreNode
 static PredNode * newPredNode(int vert) {
@@ -145,10 +146,16 @@ void showShortestPaths(ShortestPaths paths) {
 }
 
 void  freeShortestPaths(ShortestPaths paths) {
-    free(paths.dist);
     for (int i =0; i < paths.noNodes; i++) {
-        free(&paths.pred[i]);
+        PredNode *curr = paths.pred[i];
+        while (curr != NULL) {
+            PredNode *temp = curr;
+            curr = curr->next;
+            free(temp);
+        }
     }
+    free(paths.pred);
+    free(paths.dist);
 }
 
 

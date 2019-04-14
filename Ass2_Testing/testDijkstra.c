@@ -82,9 +82,7 @@ int main(int argc, char* argv[]){
 	}
   Graph g = readGraph(argv[1]);
   int i;
-  printf("numvert is %d\n", numVerticies(g));
   for(i=0; i<numVerticies(g); i++) {
-     printf("looping at %d\n", i);
     ShortestPaths paths = dijkstra(g,i);
     displayShortestPathsStruct(paths);
     freeShortestPaths(paths);
