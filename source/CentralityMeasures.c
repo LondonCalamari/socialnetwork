@@ -17,7 +17,7 @@ NodeValues outDegreeCentrality(Graph g){
         int outEdges = 0;
         AdjList curr = outIncident(g, i);
         // count the number of adjacent vertices
-        while (curr->next != NULL) {
+        while (curr != NULL) {
             outEdges++;
             curr = curr->next;
         }
@@ -29,7 +29,7 @@ NodeValues outDegreeCentrality(Graph g){
 NodeValues inDegreeCentrality(Graph g){
 	NodeValues inDegree;
     inDegree.noNodes = numVerticies(g);
-    inDegree.values = malloc(sizeof(double) * inDegree.noNodes);
+    inDegree.values = malloc(sizeof(double) * numVerticies(g));
 
     // for every values[i] we input the number of adjacent vertices
     for (int i = 0; i < inDegree.noNodes; i++) {
@@ -37,7 +37,7 @@ NodeValues inDegreeCentrality(Graph g){
         int inEdges = 0;
         AdjList curr = inIncident(g, i);
         // count the number of adjacent vertices
-        while (curr->next != NULL) {
+        while (curr != NULL) {
             inEdges++;
             curr = curr->next;
         }
@@ -45,7 +45,6 @@ NodeValues inDegreeCentrality(Graph g){
     }
 	return inDegree; 
 }
-
 NodeValues degreeCentrality(Graph g) {
 	NodeValues degree;
     degree.noNodes = numVerticies(g);
@@ -78,8 +77,9 @@ NodeValues betweennessCentralityNormalised(Graph g){
 }
 
 void showNodeValues(NodeValues values){
+    //printf("values.noNodes is %d\n", values.noNodes);
     for (int i = 0; i < values.noNodes; i++) {
-        printf("Node %d = [%f]\n", i, values.values[i]);
+        printf("%d: %f\n", i, values.values[i]);
     }
 }
 

@@ -19,7 +19,7 @@ PQ newPQ() {
     PQ pq = malloc(sizeof(PQ));
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
-    pq->size = 1;
+    pq->size = 0;
     pq->nodes = malloc(sizeof(ItemPQ));
     return pq;
 }
@@ -33,9 +33,8 @@ void  addPQ(PQ pq, ItemPQ item) {
      
     // Make sure our array has enough space
     if (pq->nitems + 1 >= pq->size) {
-        pq->size = (pq->size) * 2;
+        pq->size = (pq->size + 1) * 2;
         pq->nodes = realloc(pq->nodes, pq->size * sizeof(ItemPQ));
-        //pq->nodes = malloc(pq->size * sizeof(ItemPQ));
     }
   
     for (int i = 1; i <= pq->nitems; i++) {
@@ -54,8 +53,7 @@ void  addPQ(PQ pq, ItemPQ item) {
 
     // Insert in order (smallest at the front of the q)
     // this is the just the basic implementation 
-    int i;
-    for (i = 0; i < pq->nitems; i++) {
+    for (int i = 0; i < pq->nitems; i++) {
         if (pq->nodes[i].value > item.value) {
             // shuffle all the items down the array
             for (int curr = pq->nitems - 1; curr >= i; curr--) {
@@ -64,11 +62,8 @@ void  addPQ(PQ pq, ItemPQ item) {
             pq->nodes[i] = item;
             pq->nitems++;
             return;
-        } 
+        }
     }
-    pq->nodes[i] = item;
-    pq->nitems++;
-    return;
 
 /*
     // Insert the item into last place
@@ -160,40 +155,20 @@ void  showPQ(PQ pq) {
 
 // free's PQ
 void  freePQ(PQ pq) {
-    
-    for (int i = 0; i < pq->size; i++) {
-        free(&pq->nodes[i]);
+    /*
+    for (int i = 0; i < pq->nitems; i++) {
+        free(pq->nodes[i]);
     }
-    
+    */
     free(pq->nodes);
     free(pq);
 }
 
-
-ItemPQ newItemPQ(int a, int b){
-
-  ItemPQ *p = malloc(sizeof(struct ItemPQ)) ;
-  p->key = a;
-  p->value = b;
-  
-  return *p;
-}
-
+/*
 // Main for testing
 int main (int argc, char *argv[]) {
-    PQ pq = newPQ();
-
-    addPQ(pq,newItemPQ(5,15));
-    addPQ(pq,newItemPQ(3,11));
-    addPQ(pq,newItemPQ(2,3));
-    addPQ(pq,newItemPQ(7,24)); 
-    addPQ(pq,newItemPQ(6,34));
-
-    showPQ(pq);
-
-  //  freePQ(pq);
     printf("Complete\n");
     return EXIT_SUCCESS;
 }
-
+*/
 

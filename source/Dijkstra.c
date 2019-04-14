@@ -5,25 +5,42 @@
 #include <assert.h>
 #include <stdio.h>
 
-#define INF 999999
+#define INF 9999
 
 static PredNode * newPredNode(int vert);
-static void appendNode(PredNode *base, PredNode *new); 
+//static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
+    printf("in func\n");
     ShortestPaths paths;
-    paths.dist = malloc(sizeof(int) * numVerticies(g));
-    paths.pred = malloc(sizeof(PredNode) * numVerticies(g));
-    paths.src = v;
+	printf("start of func");
 	paths.noNodes = numVerticies(g); // is this it?
+    paths.src = v;
+    paths.dist = malloc(sizeof(int) * numVerticies(g));
+    assert(paths.dist != NULL);
+    paths.pred = malloc(sizeof(PredNode*) * numVerticies(g));
+    assert(paths.pred != NULL);
     PQ pq = newPQ();
-  
+    printf("in function]n");
+    // add all nodes to the q
+    for (int i = 0; i < numVerticies(g); i++) {
+        AdjList curr = outIncident(g, i);
+        while (curr != NULL) {
+            ItemPQ new; 
+            new.key = curr->w;
+            new.value = curr->weight;
+            addPQ(pq, new);
+            curr = curr->next;
+        }
+    }
+
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
-    for (int i = 0; paths.noNodes; i++) {
+    for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
         paths.pred[i]->next = NULL;
     }
+    /*
     AdjList curr = outIncident(g, v);
     while (curr != NULL) {
         ItemPQ new;
@@ -31,7 +48,9 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         new.value = curr->weight;
         addPQ(pq, new);
         curr = curr->next;
-    }
+    }*/
+
+
     // for each vertex attached the v add it into the pq
     paths.dist[v] = 0;
     
@@ -41,14 +60,24 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         AdjList adj = outIncident(g,item.key);
     
 		// for each neighbour in AdjList adj (adjcent nodes)
-		while (adj != NULL) {
+		// already ordered from smallest weight
+        while (adj != NULL) {
+            printf("here\n");
 			// int dest = adj->weight;
 			int new_dist = adj->weight + paths.dist[item.key];
            	if (new_dist < paths.dist[adj->w]) {
            	    // makes this the new path
                	paths.dist[adj->w] = new_dist;
-				PredNode * newPred = newPredNode(adj->w);
-           		appendNode(paths.pred[item.key], newPred); 
+				PredNode *newPred = newPredNode(adj->w);
+
+                // append the newPred 
+                PredNode *curr = paths.pred[item.key];
+                while (curr->next != NULL) {
+                    curr = curr->next;
+                }
+                curr->next = newPred;
+                curr->next->next = NULL;
+           		//appendNode(paths.pred[item.key], newPred); 
 				ItemPQ new;
            		new.key = adj->w; 
            		new.value = adj->weight;
@@ -57,6 +86,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	adj = adj->next;
         }
    	}
+    showShortestPaths(paths);
     return paths;
 }
 
@@ -68,6 +98,7 @@ static PredNode * newPredNode(int vert) {
 	return new;
 }
 
+/*
 static void appendNode(PredNode *base, PredNode *new) {
      while (base->next != NULL){
          base = base->next;
@@ -77,6 +108,7 @@ static void appendNode(PredNode *base, PredNode *new) {
      return;
 
  }
+*/
 
 /*
 // appends a PreNode to pred linked list
