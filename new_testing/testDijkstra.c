@@ -42,18 +42,14 @@ Graph readGraph(char* file) {
 	}
 	fclose(f);
 
-    printf("maxVert is %d\n", maxVert);
 	Graph g = newGraph(maxVert+1);
-    printf("first g->nV = %d\n", numVerticies(g));
 	i = 0;
 	while(i < lines) {
-        printf("inserrting\n");
 		insertEdge(g,nums[i][0],nums[i][1],nums[i][2]);
 		i++;
 	}
 	for(i=0;i<lines;i++) free(nums[i]);
 	free(nums);
-    printf("g->nV = %d\n", numVerticies(g));
 	return g;
 }
 
@@ -85,10 +81,10 @@ int main(int argc, char* argv[]){
 		return EXIT_FAILURE;
 	}
   Graph g = readGraph(argv[1]);
-  printf("numVer is %d\n", numVerticies(g));
   int i;
+  printf("entering loop\n");
   for(i=0; i<numVerticies(g); i++) {
-	  printf("i is %d\n", i);
+  printf("going aroung\n");
     ShortestPaths paths = dijkstra(g,i);
     displayShortestPathsStruct(paths);
     freeShortestPaths(paths);

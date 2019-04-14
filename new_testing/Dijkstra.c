@@ -12,11 +12,15 @@ static void appendNode(PredNode *base, PredNode *new);
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
+    printf("in func\n");
     ShortestPaths paths;
-    paths.dist = malloc(sizeof(int) * numVerticies(g));
-    paths.pred = malloc(sizeof(PredNode) * numVerticies(g));
-    paths.src = v;
+	printf("start of func");
 	paths.noNodes = numVerticies(g); // is this it?
+    paths.src = v;
+    paths.dist = malloc(sizeof(int) * numVerticies(g));
+    assert(paths.dist != NULL);
+    paths.pred = malloc(sizeof(PredNode*) * numVerticies(g));
+    assert(paths.pred != NULL);
     PQ pq = newPQ();
     printf("in function]n");
     // add all nodes to the q
