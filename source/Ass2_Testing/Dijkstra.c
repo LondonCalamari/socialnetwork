@@ -35,8 +35,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     }
     
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
-    paths.pred[0] = NULL;
-    for (int i = 1; i < paths.noNodes; i++) {
+    for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
         paths.pred[i] = NULL; //newPredNode(-1); // this first node needs to be null but idk how to do that atm
 //        paths.pred[i]->next = NULL;   // we need this i think but it segfaults
