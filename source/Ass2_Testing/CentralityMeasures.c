@@ -99,10 +99,25 @@ NodeValues closenessCentrality(Graph g){
 	return close;
 }
 
-//
+// The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+    int i = 0;
+    NodeValues close;
+    close.noNodes = numVerticies(g);
+    close.values = malloc(sizeof(double) * close.noNodes);
+    for (i = 0; i < numVerticies(g); i++) {
+        ShortestPaths paths = dijkstra(g, i);
+        for (j = 0; j < paths.noNodes; j++) {
+            while (paths.pred[j] != NULL) {
+                close.values[paths.pred[j]->v]++;
+                paths.pred[j] = paths.pred[j]->next;
+            }
+        }
+    }
+    for (i = 0; i < close.noNodes; i++;) {
+        close.values[i] = close.values[i]/close.noNodes;
+    }
+	return close;
 }
 
 //
