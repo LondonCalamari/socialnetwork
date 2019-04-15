@@ -101,7 +101,7 @@ NodeValues closenessCentrality(Graph g){
 
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
-    int i = 0;
+    int j, i =0;
     NodeValues close;
     close.noNodes = numVerticies(g);
     close.values = malloc(sizeof(double) * close.noNodes);
@@ -114,7 +114,7 @@ NodeValues betweennessCentrality(Graph g){
             }
         }
     }
-    for (i = 0; i < close.noNodes; i++;) {
+    for (i = 0; i < close.noNodes; i++) {
         close.values[i] = close.values[i]/close.noNodes;
     }
 	return close;

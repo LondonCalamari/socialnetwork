@@ -7,7 +7,7 @@
 
 #define INF 9999
 
-static PredNode *newPredNode(int vert);
+//static PredNode *newPredNode(int vert);
 //static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
@@ -20,18 +20,18 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     assert(paths.dist != NULL);
     paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
-    
+    printf("in func\n");
     PQ pq = newPQ();
     // add all nodes to the q
-    for (int i = 0; i < numVerticies(g); i++) {
-        AdjList curr = outIncident(g, i);
-        while (curr != NULL) {
-            ItemPQ new; 
-            new.key = curr->w;
-            new.value = curr->weight;
-            addPQ(pq, new);
-            curr = curr->next;
-        }
+    // TODO Are you sure we want every node? doesn't this not make sense since we only want the nodes from the start position and their value
+    // I've changed it because if you just add these values from the start the program can work and should work i dont see it working if you put the values from every node because their distance (priority in the queue) will be incorrect
+    AdjList curr = outIncident(g, v);
+    while (curr != NULL) {
+        ItemPQ new; 
+        new.key = curr->w;
+        new.value = curr->weight;
+        addPQ(pq, new);
+        curr = curr->next;
     }
     
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
@@ -40,32 +40,23 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         paths.pred[i] = NULL; //newPredNode(-1); // this first node needs to be null but idk how to do that atm
 //        paths.pred[i]->next = NULL;   // we need this i think but it segfaults
     }
-    
-    /*
-    AdjList curr = outIncident(g, v);
-    while (curr != NULL) {
-        ItemPQ new;
-        new.key = curr->w;
-        new.value = curr->weight;
-        addPQ(pq, new);
-        curr = curr->next;
-    }*/
-
-
     // for each vertex attached the v add it into the pq
     paths.dist[v] = 0;
-    
     // add all vertices of v to pq
+    int distance = 0;
     while (!PQEmpty(pq)) {
+        // will dequeue the shortest
         ItemPQ item = dequeuePQ(pq);
+        distance = item.value;
         AdjList adj = outIncident(g,item.key);
-    
+        
 		// for each neighbour in AdjList adj (adjcent nodes)
 		// already ordered from smallest weight
         while (adj != NULL) {
-			// int dest = adj->weight;
-			int new_dist = adj->weight + paths.dist[item.key];
+			int new_dist = adj->weight + distance;
            	if (new_dist < paths.dist[adj->w]) {
+           	    // TODO This needs to make a pred node list which is jsut the nodes to the previous point plus that point
+           	    /*
            	    // makes this the new path
                	paths.dist[adj->w] = new_dist;
 				PredNode *newPred = newPredNode(adj->w);
@@ -75,23 +66,28 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 while (curr->next != NULL) {
                     curr = curr->next;
                 }
+                
+                
                 curr->next = newPred;
                 curr->next->next = NULL;
+                */
            		//appendNode(paths.pred[item.key], newPred); 
-				ItemPQ new;
-           		new.key = adj->w; 
-           		new.value = adj->weight;
-				addPQ(pq, new);
+				
            	}
+           
+           	ItemPQ new;
+       		new.key = adj->w; 
+       		new.value = new_dist;
+			addPQ(pq, new);
            	adj = adj->next;
         }
    	}
-   	printf("in func\n");
+   	
     //showShortestPaths(paths);
     return paths;
 }
 
-
+/*
 // creates a new PreNode
 static PredNode * newPredNode(int vert) {
 	PredNode * new = malloc(sizeof(PredNode));
@@ -100,7 +96,7 @@ static PredNode * newPredNode(int vert) {
 	return new;
 }
 
-/*
+
 static void appendNode(PredNode *base, PredNode *new) {
      while (base->next != NULL){
          base = base->next;

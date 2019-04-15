@@ -16,6 +16,7 @@ struct PQRep {
 
 // Creates new priority queue, that can store items of type ItemPQ.
 PQ newPQ() {
+    //// Is this meant to malloc PQRep and should PQRep be typedef?
     PQ pq = malloc(sizeof(PQ));
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
