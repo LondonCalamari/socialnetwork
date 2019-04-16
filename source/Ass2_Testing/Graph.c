@@ -10,16 +10,16 @@
 AdjList createNode(int v, int weight);
 
 // Graph struct
-struct GraphRep {
+typedef struct GraphRep {
     int nV; // number of vertices
     int nE; // number of edges
     AdjList *nodeList; // adjacency list
-};
+}GraphRep;
 
 // creates new graph
 Graph newGraph(int noNodes) {
     assert(noNodes >= 0);
-    Graph g = malloc(sizeof(Graph));
+    Graph g = malloc(sizeof(GraphRep));
     if (g == NULL) { return NULL; }
 
     g->nV = noNodes;
@@ -147,7 +147,7 @@ AdjList outIncident(Graph g, Vertex v) {
     }
     return outward;
     */
-   return g->nodeList[v]->next;
+   return g->nodeList[v];
 }
 
 // Retuns an AdjList of the vertices incoming to vertex V

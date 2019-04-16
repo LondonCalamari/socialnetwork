@@ -8,16 +8,16 @@
 
 
 // Heap structure
-struct PQRep {
+typedef struct PQRep {
     ItemPQ *nodes;
     int nitems;
     int size;
-};
+}PQRep;
 
 // Creates new priority queue, that can store items of type ItemPQ.
 PQ newPQ() {
     //// Is this meant to malloc PQRep and should PQRep be typedef?
-    PQ pq = malloc(sizeof(PQ));
+    PQ pq = malloc(sizeof(PQRep));
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
     pq->size = 0;
@@ -41,16 +41,13 @@ void  addPQ(PQ pq, ItemPQ item) {
     for (int i = 1; i <= pq->nitems; i++) {
         if (pq->nodes[i].key == item.key) {
             updatePQ(pq, item);
-            printf("updated key = %d, value = %d\n", pq->nodes[i].key, pq->nodes[i].value);
             return;
         }
     }
-
     // adding the first item
     if (pq->nitems == 0) {
         pq->nodes[0] = item;
         pq->nitems++;
-        printf("pppq->nitems is %d\n", pq->nitems);
         return;
     }
 
@@ -64,7 +61,6 @@ void  addPQ(PQ pq, ItemPQ item) {
             }
             pq->nodes[i] = item;
             pq->nitems++;
-        printf("pq->nitems is %d\n", pq->nitems);
             return;
         }
     }

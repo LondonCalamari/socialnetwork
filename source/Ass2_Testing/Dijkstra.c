@@ -12,7 +12,6 @@
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
-    
     ShortestPaths paths;
     paths.noNodes = numVerticies(g); // is this it?
     paths.src = v;
@@ -20,11 +19,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     assert(paths.dist != NULL);
     paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
-    printf("in func\n");
     PQ pq = newPQ();
-    // add all nodes to the q
-    // TODO Are you sure we want every node? doesn't this not make sense since we only want the nodes from the start position and their value
-    // I've changed it because if you just add these values from the start the program can work and should work i dont see it working if you put the values from every node because their distance (priority in the queue) will be incorrect
     AdjList curr = outIncident(g, v);
     while (curr != NULL) {
         ItemPQ new; 
@@ -72,14 +67,14 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 */
                 //
            		//appendNode(paths.pred[item.key], newPred); 
-			printf("new path found\n");	
+			//printf("new path found\n");
+			    paths.dist[adj->w] = new_dist;
+			    ItemPQ new;
+           		new.key = adj->w; 
+           		new.value = new_dist;
+			    addPQ(pq, new);	
            	}
-           
-           	ItemPQ new;
-       		new.key = adj->w; 
-       		new.value = new_dist;
-			addPQ(pq, new);
-            printf("after add\n");
+            //printf("after add\n");
             // TODO two issues seem to be are this nitems thing is always 1 and
             // adj->next is never NULL 
            	adj = adj->next;
