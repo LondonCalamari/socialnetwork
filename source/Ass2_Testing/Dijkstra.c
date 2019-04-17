@@ -21,8 +21,11 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     assert(paths.pred != NULL);
     PQ pq = newPQ();
     AdjList curr = outIncident(g, v);
+    ItemPQ new; 
+    new.key = v;
+    new.value = 0;
+    addPQ(pq, new);
     while (curr != NULL) {
-        ItemPQ new; 
         new.key = curr->w;
         new.value = curr->weight;
         addPQ(pq, new);
