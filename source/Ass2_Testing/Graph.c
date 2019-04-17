@@ -147,7 +147,7 @@ AdjList outIncident(Graph g, Vertex v) {
     }
     return outward;
     */
-   return g->nodeList[v];
+   return g->nodeList[v]->next;
 }
 
 // Retuns an AdjList of the vertices incoming to vertex V
