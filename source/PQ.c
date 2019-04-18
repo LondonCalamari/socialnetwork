@@ -65,10 +65,13 @@ void  addPQ(PQ pq, ItemPQ item) {
         }
     }
 
-/*
+
     // Insert the item into last place
     pq->nodes[pq->nitems] = item;
+    pq->nitems++;
+    return;
 
+/*
     // Put it into the correct position
     int child = pq->nitems; // start from [1]
     int parent = child / 2;
