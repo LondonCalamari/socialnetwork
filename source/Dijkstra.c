@@ -7,86 +7,84 @@
 
 #define INF 9999
 
-static PredNode * newPredNode(int vert);
+static PredNode *newPredNode(int vert);
 //static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
-    printf("in func\n");
     ShortestPaths paths;
-	printf("start of func");
-	paths.noNodes = numVerticies(g); // is this it?
+    paths.noNodes = numVerticies(g); // is this it?
     paths.src = v;
     paths.dist = malloc(sizeof(int) * numVerticies(g));
     assert(paths.dist != NULL);
-    paths.pred = malloc(sizeof(PredNode*) * numVerticies(g));
+    paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
     PQ pq = newPQ();
-    printf("in function]n");
-    // add all nodes to the q
-    for (int i = 0; i < numVerticies(g); i++) {
-        AdjList curr = outIncident(g, i);
-        while (curr != NULL) {
-            ItemPQ new; 
-            new.key = curr->w;
-            new.value = curr->weight;
-            addPQ(pq, new);
-            curr = curr->next;
-        }
-    }
-
-    // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
-    for (int i = 0; i < paths.noNodes; i++) {
-        paths.dist[i] = INF; 
-        paths.pred[i]->next = NULL;
-    }
-    /*
     AdjList curr = outIncident(g, v);
+    ItemPQ new; 
+    new.key = v;
+    new.value = 0;
+    addPQ(pq, new);
     while (curr != NULL) {
-        ItemPQ new;
         new.key = curr->w;
         new.value = curr->weight;
         addPQ(pq, new);
         curr = curr->next;
-    }*/
-
-
+    }
+    
+    // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
+    for (int i = 0; i < paths.noNodes; i++) {
+        paths.dist[i] = INF; 
+        paths.pred[i] = NULL; //newPredNode(-1); // this first node needs to be null but idk how to do that atm
+//        paths.pred[i]->next = NULL;   // we need this i think but it segfaults
+    }
     // for each vertex attached the v add it into the pq
     paths.dist[v] = 0;
-    
     // add all vertices of v to pq
+    int distance = 0;
     while (!PQEmpty(pq)) {
+        // will dequeue the shortest
         ItemPQ item = dequeuePQ(pq);
+        distance = item.value;
         AdjList adj = outIncident(g,item.key);
-    
+        
 		// for each neighbour in AdjList adj (adjcent nodes)
 		// already ordered from smallest weight
         while (adj != NULL) {
-            printf("here\n");
-			// int dest = adj->weight;
-			int new_dist = adj->weight + paths.dist[item.key];
+			int new_dist = adj->weight + distance;
            	if (new_dist < paths.dist[adj->w]) {
+           	    // TODO This needs to make a pred node list which is jsut the nodes to the previous point plus that point
            	    // makes this the new path
-               	paths.dist[adj->w] = new_dist;
-				PredNode *newPred = newPredNode(adj->w);
-
-                // append the newPred 
+                // append the newPred
                 PredNode *curr = paths.pred[item.key];
-                while (curr->next != NULL) {
+                while (curr != NULL) {
+                    paths.pred[adj->w] = newPredNode(curr->v);
                     curr = curr->next;
+                    paths.pred[adj->w] = paths.pred[adj->w]->next;
                 }
-                curr->next = newPred;
-                curr->next->next = NULL;
-           		//appendNode(paths.pred[item.key], newPred); 
-				ItemPQ new;
+                paths.pred[adj->w] = newPredNode(item.key);
+                paths.pred[adj->w]->next = NULL;
+                //
+			    paths.dist[adj->w] = new_dist;
+			    ItemPQ new;
            		new.key = adj->w; 
-           		new.value = adj->weight;
-				addPQ(pq, new);
+           		new.value = new_dist;
+			    addPQ(pq, new);	
            	}
+            //printf("after add\n");
+            // TODO two issues seem to be are this nitems thing is always 1 and
+            // adj->next is never NULL 
            	adj = adj->next;
         }
    	}
-    showShortestPaths(paths);
+   	int i = 0;
+   	while (i < paths.noNodes) {
+   	    if (paths.dist[i] == INF) {
+   	        paths.dist[i] = 0;
+   	    }
+   	    i++;
+   	}
+    //showShortestPaths(paths);
     return paths;
 }
 
@@ -119,7 +117,7 @@ static PredNode appendNode(PredNode old, PredNode new, int item) {
 		return old[item];
 	}
 	return appendNode(old[item]->next, new, item);
-}
+/
 */
 
 void showShortestPaths(ShortestPaths paths) {
@@ -144,12 +142,17 @@ void showShortestPaths(ShortestPaths paths) {
         }
 }
 
-
 void  freeShortestPaths(ShortestPaths paths) {
-    free(paths.dist);
     for (int i =0; i < paths.noNodes; i++) {
-        free(&paths.pred[i]);
+        PredNode *curr = paths.pred[i];
+        while (curr != NULL) {
+            PredNode *temp = curr;
+            curr = curr->next;
+            free(temp);
+        }
     }
+    free(paths.pred);
+    free(paths.dist);
 }
 
 

@@ -8,15 +8,16 @@
 
 
 // Heap structure
-struct PQRep {
+typedef struct PQRep {
     ItemPQ *nodes;
     int nitems;
     int size;
-};
+}PQRep;
 
 // Creates new priority queue, that can store items of type ItemPQ.
 PQ newPQ() {
-    PQ pq = malloc(sizeof(PQ));
+    //// Is this meant to malloc PQRep and should PQRep be typedef?
+    PQ pq = malloc(sizeof(PQRep));
     if (pq == NULL) { return NULL; }
     pq->nitems = 0;
     pq->size = 0;
@@ -39,11 +40,10 @@ void  addPQ(PQ pq, ItemPQ item) {
   
     for (int i = 1; i <= pq->nitems; i++) {
         if (pq->nodes[i].key == item.key) {
-            pq->nodes[i].value = item.value;
+            updatePQ(pq, item);
             return;
         }
     }
-
     // adding the first item
     if (pq->nitems == 0) {
         pq->nodes[0] = item;
@@ -54,7 +54,7 @@ void  addPQ(PQ pq, ItemPQ item) {
     // Insert in order (smallest at the front of the q)
     // this is the just the basic implementation 
     for (int i = 0; i < pq->nitems; i++) {
-        if (pq->nodes[i].value > item.value) {
+        if (pq->nodes[i].value >= item.value) {
             // shuffle all the items down the array
             for (int curr = pq->nitems - 1; curr >= i; curr--) {
                 pq->nodes[curr+1] = pq->nodes[curr];
@@ -165,10 +165,47 @@ void  freePQ(PQ pq) {
 }
 
 /*
+ItemPQ newItemPQ(int a, int b){
+
+  ItemPQ *p = malloc(sizeof(struct ItemPQ)) ;
+  p->key = a;
+  p->value = b;
+  
+  return *p;
+}
+
+
 // Main for testing
 int main (int argc, char *argv[]) {
-    printf("Complete\n");
+    printf("=== Testing ===\n");
+    PQ pq = newPQ();
+    addPQ(pq,newItemPQ(1,100));
+    printf("addPQ: {1,100}\n");
+    addPQ(pq,newItemPQ(2,15));
+    printf("addPQ: {2,15}\n");
+    addPQ(pq,newItemPQ(3,1));
+    printf("addPQ: {3,1}\n");
+    addPQ(pq,newItemPQ(4,4));
+    printf("addPQ: {4,4}\n");
+    addPQ(pq,newItemPQ(4,8));
+    printf("addPQ: {4,8}\n");
+    addPQ(pq,newItemPQ(5,3));
+    printf("addPQ: {5,3}\n");
+    addPQ(pq,newItemPQ(2,3));
+    printf("addPQ: {2,3}\n");
+    addPQ(pq,newItemPQ(7,4));
+    printf("addPQ: {7,4}\n");
+    addPQ(pq,newItemPQ(9,2));
+    printf("addPQ: {9,2}\n");
+    addPQ(pq,newItemPQ(2,6));
+    printf("addPQ: {2,6}\n");
+    addPQ(pq,newItemPQ(22,6));
+    printf("addPQ: {22,6}\n");
+
+    showPQ(pq);
+    free(pq);
+    printf("END\n=== Complete ===\n");
     return EXIT_SUCCESS;
 }
-*/
 
+*/
