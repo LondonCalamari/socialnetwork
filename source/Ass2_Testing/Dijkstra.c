@@ -53,13 +53,10 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         while (adj != NULL) {
 			int new_dist = adj->weight + distance;
            	if (new_dist < paths.dist[adj->w]) {
-           	    // TODO This needs to make a pred node list which is jsut the nodes to the previous point plus that point
            	    // makes this the new path
-                // append the newPred
-                // doesnt add anythings
                 PredNode *curr = paths.pred[item.key];
                 if (curr != NULL) {
-                    paths.pred[adj->w] = newPredNode(curr->v);
+                    paths.pred[adj->w]= newPredNode(curr->v);
                     while (curr->next != NULL) {
                         paths.pred[adj->w]->next = newPredNode(curr->next->v);
                         curr = curr->next;
@@ -69,16 +66,13 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 // Correct
                 paths.pred[adj->w] = newPredNode(item.key);
                 paths.pred[adj->w]->next = NULL;
-                //
 			    paths.dist[adj->w] = new_dist;
+
 			    ItemPQ new;
            		new.key = adj->w; 
            		new.value = new_dist;
 			    addPQ(pq, new);	
            	}
-            //printf("after add\n");
-            // TODO two issues seem to be are this nitems thing is always 1 and
-            // adj->next is never NULL 
            	adj = adj->next;
         }
    	}
