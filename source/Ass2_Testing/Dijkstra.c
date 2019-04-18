@@ -7,7 +7,7 @@
 
 #define INF 9999
 
-//static PredNode *newPredNode(int vert);
+static PredNode *newPredNode(int vert);
 //static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
@@ -54,23 +54,17 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 			int new_dist = adj->weight + distance;
            	if (new_dist < paths.dist[adj->w]) {
            	    // TODO This needs to make a pred node list which is jsut the nodes to the previous point plus that point
-           	    
-                /*
            	    // makes this the new path
-               	paths.dist[adj->w] = new_dist;
-				PredNode *newPred = newPredNode(adj->w);
-
-                // append the newPred 
+                // append the newPred
                 PredNode *curr = paths.pred[item.key];
-                while (curr->next != NULL) {
+                while (curr != NULL) {
+                    paths.pred[adj->w] = newPredNode(curr->v);
                     curr = curr->next;
+                    paths.pred[adj->w] = paths.pred[adj->w]->next;
                 }
-                curr->next = newPred;
-                curr->next->next = NULL;
-                */
+                paths.pred[adj->w] = newPredNode(item.key);
+                paths.pred[adj->w]->next = NULL;
                 //
-           		//appendNode(paths.pred[item.key], newPred); 
-			//printf("new path found\n");
 			    paths.dist[adj->w] = new_dist;
 			    ItemPQ new;
            		new.key = adj->w; 
@@ -83,12 +77,17 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	adj = adj->next;
         }
    	}
-   	
+   	int i = 0;
+   	while (i < paths.noNodes) {
+   	    if (paths.dist[i] == INF) {
+   	        paths.dist[i] = 0;
+   	    }
+   	    i++;
+   	}
     //showShortestPaths(paths);
     return paths;
 }
 
-/*
 // creates a new PreNode
 static PredNode * newPredNode(int vert) {
 	PredNode * new = malloc(sizeof(PredNode));
@@ -96,7 +95,6 @@ static PredNode * newPredNode(int vert) {
 	new->next = NULL;
 	return new;
 }
-*/
 
 /*
 static void appendNode(PredNode *base, PredNode *new) {
