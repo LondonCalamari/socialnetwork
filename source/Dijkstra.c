@@ -57,8 +57,9 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
            	    // makes this the new path
                 // append the newPred
                 PredNode *curr = paths.pred[item.key];
-                while (curr != NULL) {
-                    paths.pred[adj->w] = newPredNode(curr->v);
+                paths.pred[adj->w] = newPredNode(curr->v);
+                while (curr->next != NULL) {
+                    paths.pred[adj->w]->next = newPredNode(curr->next->v);
                     curr = curr->next;
                     paths.pred[adj->w] = paths.pred[adj->w]->next;
                 }
