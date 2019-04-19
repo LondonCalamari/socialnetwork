@@ -152,7 +152,7 @@ void  showPQ(PQ pq) {
     for (int i = 0; i < pq->nitems; i++) {
         printf("[%d](%d)->", pq->nodes[i].key, pq->nodes[i].value);
     }
-   // printf("[X]\n");
+//    printf("[X]\n");
 }
 
 // free's PQ
@@ -204,7 +204,22 @@ int main (int argc, char *argv[]) {
     addPQ(pq,newItemPQ(22,6));
     printf("addPQ: {22,6}\n");
 
+    dequeuePQ(pq);
     showPQ(pq);
+
+    dequeuePQ(pq);
+    showPQ(pq);
+    dequeuePQ(pq);
+    showPQ(pq);
+    dequeuePQ(pq);
+    showPQ(pq);
+    dequeuePQ(pq);
+    showPQ(pq);
+    dequeuePQ(pq);
+    showPQ(pq);
+    dequeuePQ(pq);
+    showPQ(pq);
+
     free(pq);
     printf("END\n=== Complete ===\n");
     return EXIT_SUCCESS;

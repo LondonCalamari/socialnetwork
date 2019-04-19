@@ -27,6 +27,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     addPQ(pq, new);
     while (curr != NULL) {
         new.key = curr->w;
+        printf("added node %d\n", new.key);
         new.value = curr->weight;
         addPQ(pq, new);
         curr = curr->next;
@@ -35,8 +36,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
     for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
-        paths.pred[i] = NULL; //newPredNode(-1); // this first node needs to be null but idk how to do that atm
-//        paths.pred[i]->next = NULL;   // we need this i think but it segfaults
+        paths.pred[i] = NULL; 
     }
     // for each vertex attached the v add it into the pq
     paths.dist[v] = 0;
@@ -45,6 +45,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     while (!PQEmpty(pq)) {
         // will dequeue the shortest
         ItemPQ item = dequeuePQ(pq);
+        printf("deq'd %d\n", item.key);
         distance = item.value;
         AdjList adj = outIncident(g,item.key);
         
@@ -52,10 +53,12 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		// already ordered from smallest weight
         while (adj != NULL) {
 			int new_dist = adj->weight + distance;
-           	if (new_dist < paths.dist[adj->w]) {
+           	if (new_dist <= paths.dist[adj->w]) {
            	    // makes this the new path
+               /* 
                 PredNode *curr = paths.pred[item.key];
                 if (curr != NULL) {
+                    printf("in here\n");
                     paths.pred[adj->w]= newPredNode(curr->v);
                     while (curr->next != NULL) {
                         paths.pred[adj->w]->next = newPredNode(curr->next->v);
@@ -63,19 +66,44 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                         paths.pred[adj->w] = paths.pred[adj->w]->next;
                     }
                 }
-                // Correct
-                paths.pred[adj->w] = newPredNode(item.key);
-                paths.pred[adj->w]->next = NULL;
-			    paths.dist[adj->w] = new_dist;
+                */
+                // copy the path from item.key into adj
+                PredNode *curr = paths.pred[item.key];
+                PredNode *curr_adj = paths.pred[adj->w];
+                while (curr_adj != NULL) {
+                    curr_adj = curr_adj->next;
+                }
 
+                printf("item.key is %d, ", item.key);
+                printf("NEW PATH adj->w is %d\n", adj->w);
+                while (curr != NULL) {
+                printf("curr->v is %d\n", curr->v);
+                    curr_adj = newPredNode(curr->v);
+                    paths.pred[adj->w] = curr_adj;
+                    curr_adj = curr_adj->next;
+                    curr = curr->next;
+                }
+
+                
+                curr_adj = newPredNode(item.key);
+                curr_adj->next = NULL;
+                
+                paths.pred[adj->w] = curr_adj;
+                //paths.pred[adj->w] = newPredNode(item.key);
+                //paths.pred[adj->w]->next = NULL;
+			    paths.dist[adj->w] = new_dist;
+                
 			    ItemPQ new;
            		new.key = adj->w; 
            		new.value = new_dist;
+                printf("new dist pq add %d\n", new.key);
 			    addPQ(pq, new);	
            	}
            	adj = adj->next;
         }
    	}
+
+    // If node is unreachable change dist to 0
    	int i = 0;
    	while (i < paths.noNodes) {
    	    if (paths.dist[i] == INF) {
