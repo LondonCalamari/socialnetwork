@@ -68,6 +68,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                     curr = curr->next;
                 }
                 curr->next = newPredNode(item.key);
+                curr->next->next = NULL;
                 paths.dist[adj->w] = new_dist;
                 
                 ItemPQ new;
