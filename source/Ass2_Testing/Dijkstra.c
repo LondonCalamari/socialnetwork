@@ -27,7 +27,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     addPQ(pq, new);
     while (curr != NULL) {
         new.key = curr->w;
-        printf("added node %d\n", new.key);
         new.value = curr->weight;
         addPQ(pq, new);
         curr = curr->next;
@@ -45,7 +44,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     while (!PQEmpty(pq)) {
         // will dequeue the shortest
         ItemPQ item = dequeuePQ(pq);
-        printf("deq'd %d\n", item.key);
         distance = item.value;
         AdjList adj = outIncident(g,item.key);
         
@@ -70,25 +68,23 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 // copy the path from item.key into adj
                 PredNode *curr = paths.pred[item.key];
                 PredNode *curr_adj = paths.pred[adj->w];
-                while (curr_adj != NULL) {
-                    curr_adj = curr_adj->next;
-                }
-
-                printf("item.key is %d, ", item.key);
-                printf("NEW PATH adj->w is %d\n", adj->w);
+                //curr_adj = newPredNode(item.key);
+               
                 while (curr != NULL) {
-                printf("curr->v is %d\n", curr->v);
+                    curr_adj = paths.pred[adj->w];
+                    while (curr_adj != NULL) {
+                        curr_adj = curr_adj->next;
+                    }
                     curr_adj = newPredNode(curr->v);
-                    paths.pred[adj->w] = curr_adj;
-                    curr_adj = curr_adj->next;
+                    curr_adj->next = NULL;
                     curr = curr->next;
                 }
-
-                
                 curr_adj = newPredNode(item.key);
                 curr_adj->next = NULL;
-                
                 paths.pred[adj->w] = curr_adj;
+                
+                
+                //paths.pred[adj->w] = curr_adj;
                 //paths.pred[adj->w] = newPredNode(item.key);
                 //paths.pred[adj->w]->next = NULL;
 			    paths.dist[adj->w] = new_dist;
@@ -96,7 +92,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 			    ItemPQ new;
            		new.key = adj->w; 
            		new.value = new_dist;
-                printf("new dist pq add %d\n", new.key);
 			    addPQ(pq, new);	
            	}
            	adj = adj->next;
