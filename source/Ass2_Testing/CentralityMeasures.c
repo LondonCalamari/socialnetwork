@@ -80,13 +80,13 @@ NodeValues closenessCentrality(Graph g){
         // find the number of reachable nodes
         double reachable = 0;
         for (int k = 0; k < close.noNodes; i++) {
-            if (paths.dist[i] != INF) { reachable++; }
+            if (paths.dist[i] != 0) { reachable++; }
         }
 
         // sum all the shortest distances for reachable nodes
         double sum = 0;
         for (int j = 0; j < paths.noNodes; j++) {
-            if (paths.dist[j] == INF) { continue; }
+            if (paths.dist[j] == 0) { continue; }
             sum += paths.dist[j];
         }
        
