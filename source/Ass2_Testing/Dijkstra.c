@@ -51,49 +51,25 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
 		// already ordered from smallest weight
         while (adj != NULL) {
 			int new_dist = adj->weight + distance;
-           	if (new_dist <= paths.dist[adj->w]) {
-           	    // makes this the new path
-               /* 
-                PredNode *curr = paths.pred[item.key];
-                if (curr != NULL) {
-                    printf("in here\n");
-                    paths.pred[adj->w]= newPredNode(curr->v);
-                    while (curr->next != NULL) {
-                        paths.pred[adj->w]->next = newPredNode(curr->next->v);
-                        curr = curr->next;
-                        paths.pred[adj->w] = paths.pred[adj->w]->next;
-                    }
-                }
-                */
-                // copy the path from item.key into adj
-                PredNode *curr = paths.pred[item.key];
-                PredNode *curr_adj = paths.pred[adj->w];
-                //curr_adj = newPredNode(item.key);
-               
-                while (curr != NULL) {
-                    curr_adj = paths.pred[adj->w];
-                    while (curr_adj != NULL) {
-                        curr_adj = curr_adj->next;
-                    }
-                    curr_adj = newPredNode(curr->v);
-                    curr_adj->next = NULL;
-                    curr = curr->next;
-                }
-                curr_adj = newPredNode(item.key);
-                curr_adj->next = NULL;
-                paths.pred[adj->w] = curr_adj;
-                
-                
-                //paths.pred[adj->w] = curr_adj;
-                //paths.pred[adj->w] = newPredNode(item.key);
-                //paths.pred[adj->w]->next = NULL;
+           	if (new_dist < paths.dist[adj->w]) {
+                paths.pred[adj->w] = newPredNode(item.key);
+                paths.pred[adj->w]->next = NULL;
 			    paths.dist[adj->w] = new_dist;
                 
-			    ItemPQ new;
+           	} else if (new_dist == paths.dist[adj->w]) {
+                PredNode *curr = paths.pred[adj->w];
+                while (curr != NULL) {
+                    curr = curr->next;
+                }
+                PredNode *newNode = newPredNode(item.key);
+                curr = newNode;
+                paths.pred[adj->w] = curr;
+
+                ItemPQ new;
            		new.key = adj->w; 
            		new.value = new_dist;
-			    addPQ(pq, new);	
-           	}
+			    addPQ(pq, new);
+            }
            	adj = adj->next;
         }
    	}
