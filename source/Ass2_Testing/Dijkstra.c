@@ -55,7 +55,12 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 paths.pred[adj->w] = newPredNode(item.key);
                 paths.pred[adj->w]->next = NULL;
 			    paths.dist[adj->w] = new_dist;
-                
+ 
+                ItemPQ new;
+           		new.key = adj->w; 
+           		new.value = new_dist;
+			    addPQ(pq, new);               
+
            	} else if (new_dist == paths.dist[adj->w]) {
                 PredNode *curr = paths.pred[adj->w];
                 while (curr != NULL) {
