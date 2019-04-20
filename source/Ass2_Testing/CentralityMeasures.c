@@ -114,6 +114,7 @@ NodeValues betweennessCentrality(Graph g){
         for (int j = 0; j < paths.noNodes; j++) {
             split = 0;
             PredNode * count = paths.pred[j];
+            // if multiple pred worth half each
             while (count != NULL) { 
                 split++;
                 count = count->next;
