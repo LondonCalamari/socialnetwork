@@ -112,11 +112,14 @@ NodeValues betweennessCentrality(Graph g){
     for (i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
         printf("\nPath from : %d\n", i);
+        printf("\n");
+        showShortestPaths(paths);
+        printf("\n");
         for (int j = 0; j < paths.noNodes; j++) {
             printf("Pred of : %d\n", j);
             split = 0;
             PredNode * count = paths.pred[j];
-            // if multiple pred worth half each
+            // if multiple pred worth fraction each
             while (count != NULL) { 
                 split++;
                 count = count->next;
