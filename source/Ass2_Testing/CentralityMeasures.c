@@ -76,11 +76,11 @@ NodeValues closenessCentrality(Graph g){
 
     for (int i = 0; i < close.noNodes; i++) {
         ShortestPaths paths = dijkstra(g, i);
-
+        //showShortestPaths(paths);
         // find the number of reachable nodes
         double reachable = 0;
-        for (int k = 0; k < close.noNodes; i++) {
-            if (paths.dist[i] != 0) { reachable++; }
+        for (int k = 0; k < paths.noNodes; k++) {
+            if (paths.dist[k] != 0 || paths.src == k) { reachable++; }
         }
 
         // sum all the shortest distances for reachable nodes
@@ -90,12 +90,15 @@ NodeValues closenessCentrality(Graph g){
             sum += paths.dist[j];
         }
        
-        // apply Wasserman and Faust formula
-        double closeness = ((reachable-1)/(close.noNodes-1))*((reachable-1)/(sum));
-        
-        close.values[i] = closeness;
+        // make sure we are not dividing by 0
+        if (close.noNodes-1 == 0 || sum == 0) {
+            close.values[i] = 0;
+        } else {
+            // apply Wasserman and Faust formula
+            double closeness = ((reachable-1)/(close.noNodes-1))*((reachable-1)/(sum));
+            close.values[i] = closeness;
+        }
     }
-
 	return close;
 }
 
