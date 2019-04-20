@@ -11,6 +11,7 @@ static PredNode *newPredNode(int vert);
 //static void appendNode(PredNode *base, PredNode *new); 
 // static PredNode appendNode(PredNode old, PredNode new, int item);
 
+// for a given vertex, return all the shortest paths
 ShortestPaths dijkstra(Graph g, Vertex v) {
     ShortestPaths paths;
     paths.noNodes = numVerticies(g); // is this it?
@@ -19,12 +20,17 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     assert(paths.dist != NULL);
     paths.pred = malloc(sizeof(PredNode *) * numVerticies(g));
     assert(paths.pred != NULL);
+
     PQ pq = newPQ();
-    AdjList curr = outIncident(g, v);
+    
+    // Add itself to the start of the pq
     ItemPQ new; 
     new.key = v;
     new.value = 0;
     addPQ(pq, new);
+
+    // Add the adjacent nodes
+    AdjList curr = outIncident(g, v);
     while (curr != NULL) {
         new.key = curr->w;
         new.value = curr->weight;
@@ -32,20 +38,18 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         curr = curr->next;
     }
     
-    // initialise dist[] to all INF, pred[] to all NULL, except dist[v] = 0;
+    // initialise dist[] to all INF, pred[] to all NULL
     for (int i = 0; i < paths.noNodes; i++) {
         paths.dist[i] = INF; 
-        paths.pred[i] = NULL; //newPredNode(-1); // this first node needs to be null but idk how to do that atm
-//        paths.pred[i]->next = NULL;   // we need this i think but it segfaults
+        paths.pred[i] = NULL; 
     }
-    // for each vertex attached the v add it into the pq
+
+    // dist to itself is 0
     paths.dist[v] = 0;
-    // add all vertices of v to pq
-    int distance = 0;
     while (!PQEmpty(pq)) {
         // will dequeue the shortest
         ItemPQ item = dequeuePQ(pq);
-        distance = item.value;
+        int distance = item.value;
         AdjList adj = outIncident(g,item.key);
         
 		// for each neighbour in AdjList adj (adjcent nodes)
@@ -53,31 +57,44 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         while (adj != NULL) {
 			int new_dist = adj->weight + distance;
            	if (new_dist < paths.dist[adj->w]) {
-           	    // TODO This needs to make a pred node list which is jsut the nodes to the previous point plus that point
-           	    // makes this the new path
-                // append the newPred
-                PredNode *curr = paths.pred[item.key];
-                paths.pred[adj->w] = newPredNode(curr->v);
-                while (curr->next != NULL) {
-                    paths.pred[adj->w]->next = newPredNode(curr->next->v);
-                    curr = curr->next;
-                    paths.pred[adj->w] = paths.pred[adj->w]->next;
-                }
+                // Add its previous node 
                 paths.pred[adj->w] = newPredNode(item.key);
                 paths.pred[adj->w]->next = NULL;
-                //
 			    paths.dist[adj->w] = new_dist;
+
 			    ItemPQ new;
            		new.key = adj->w; 
            		new.value = new_dist;
-			    addPQ(pq, new);	
-           	}
-            //printf("after add\n");
-            // TODO two issues seem to be are this nitems thing is always 1 and
-            // adj->next is never NULL 
+			    addPQ(pq, new);
+                
+           	} else if (new_dist == paths.dist[adj->w]) {
+                PredNode *curr = paths.pred[adj->w];
+                int cond = 0;
+                while (curr->next != NULL) {
+                    if (item.key == curr->v) {
+                       cond = 1;
+                       break;
+                    } 
+                    curr = curr->next;
+                }
+                // If the node already has a pred, append to the list
+                if (curr->v == item.key) cond = 1;
+                if (cond == 0) {
+                    curr->next = newPredNode(item.key);
+                    paths.dist[adj->w] = new_dist;
+                }
+
+                // Add node to the pq
+                ItemPQ new;
+           		new.key = adj->w; 
+           		new.value = new_dist;
+			    addPQ(pq, new);
+            }
            	adj = adj->next;
         }
    	}
+
+    // If node is unreachable change dist to 0
    	int i = 0;
    	while (i < paths.noNodes) {
    	    if (paths.dist[i] == INF) {
@@ -85,7 +102,6 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
    	    }
    	    i++;
    	}
-    //showShortestPaths(paths);
     return paths;
 }
 
@@ -97,30 +113,7 @@ static PredNode * newPredNode(int vert) {
 	return new;
 }
 
-/*
-static void appendNode(PredNode *base, PredNode *new) {
-     while (base->next != NULL){
-         base = base->next;
-     }
-     base->next = new;
-     base->next->next = NULL;
-     return;
-
- }
-*/
-
-/*
-// appends a PreNode to pred linked list
-static PredNode appendNode(PredNode old, PredNode new, int item) {
-	if (old[item]->next == NULL) {
-		old[item]->next = new;
-		old[item]->next->next = NULL;
-		return old[item];
-	}
-	return appendNode(old[item]->next, new, item);
-/
-*/
-
+// prints the shortest paths
 void showShortestPaths(ShortestPaths paths) {
     int i = 0;
         printf("Node %d\n", paths.src);
@@ -143,6 +136,7 @@ void showShortestPaths(ShortestPaths paths) {
         }
 }
 
+// free function
 void  freeShortestPaths(ShortestPaths paths) {
     for (int i =0; i < paths.noNodes; i++) {
         PredNode *curr = paths.pred[i];
