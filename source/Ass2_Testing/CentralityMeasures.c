@@ -111,7 +111,9 @@ NodeValues betweennessCentrality(Graph g){
     close.values = malloc(sizeof(double) * close.noNodes);
     for (i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
+        printf("\nPath from : %d\n", i);
         for (int j = 0; j < paths.noNodes; j++) {
+            printf("Pred of : %d\n", j);
             split = 0;
             PredNode * count = paths.pred[j];
             // if multiple pred worth half each
@@ -120,8 +122,10 @@ NodeValues betweennessCentrality(Graph g){
                 count = count->next;
             }
             while (paths.pred[j] != NULL) {
+                printf("Pred Node : %d\n", paths.pred[j]->v);
                 if (paths.pred[j]->v != i) {
                     close.values[paths.pred[j]->v] = close.values[paths.pred[j]->v] + 1.0/split;
+                    printf("Value Update!\n");
                 }
                 paths.pred[j] = paths.pred[j]->next;
             }
