@@ -20,14 +20,14 @@ The main focus of this assignment is to read graph data from a given file, build
 - [x] PQEmpty
 - [x] showPQ
 - [x] freePQ
-- [ ] ShortestPaths dijkstra(Graph, Vertex)
-- [ ] showShortestPaths
-- [ ] freeShortestPaths
+- [x] ShortestPaths dijkstra(Graph, Vertex)
+- [x] showShortestPaths
+- [x] freeShortestPaths
 
 ### Part 3: Centrality Measures for Social Network Analysis, Degree Centrality (5% marks), Closeness Centrality (15% marks), Betweenness Centrality (15% marks)
-- [ ] outDegreeCentrality
-- [ ] inDegreeCentrality
-- [ ] degreeCentrality
+- [x] outDegreeCentrality
+- [x] inDegreeCentrality
+- [x] degreeCentrality
 - [ ] closenessCentrality
 - [ ] betweennessCentrality
 - [ ] betweennessCentralityNormalised
