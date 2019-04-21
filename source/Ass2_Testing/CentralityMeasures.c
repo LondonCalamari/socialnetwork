@@ -8,7 +8,7 @@
 
 #define INF 9999
 
-static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths);
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split);
 
 // Contains number of out going edges from every vertice 
 NodeValues outDegreeCentrality(Graph g){
@@ -107,31 +107,33 @@ NodeValues closenessCentrality(Graph g){
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
     int i = 0;
+    int split = 1;
     NodeValues close;
     close.noNodes = numVerticies(g);
     close.values = malloc(sizeof(double) * close.noNodes);
     for (i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
         for (int j = 0; j < paths.noNodes; j++) {
-            value_counter(i, j, close, paths);
+            value_counter(i, j, close, paths, split);
         }
     }
 	return close;
 }
 
-static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths)  {
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split )  {
     PredNode * count = paths.pred[curr];
-    int split = 0;
+    int spliter = 1;
+    if (count != NULL ) { count = count->next;}
     while (count != NULL) { 
-        split++;
+        spliter++;
         count = count->next;
     }
+    split = split * spliter;
     count = paths.pred[curr];
     while (count != NULL) {
         if (count->v != src) {
             close.values[count->v] = close.values[count->v] + 1.0/split;
-                
-            value_counter(src, count->v, close, paths);
+            value_counter(src, count->v, close, paths, split);
         }
         count = count->next;
     }
