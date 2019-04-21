@@ -19,7 +19,7 @@
  * 
  */
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
-    double distances[numVerticies(g)][numVerticies(g)] = {0};
+    double distances[10][10/*numVerticies(g)*/] = {0};
     for (int i = 0; i < numVerticies(g); i++) {
         for (int j = 0; j < numVerticies(g); j++) {
             distances[i][j] = MAX;
@@ -58,14 +58,11 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
 }
 
 // recursively free the dendrogram
-static Dendrogram recursiveFree(Dendrogram d) {
-    if (d == NULL) { return NULL; }
-    recursiveFree(d->left);
-    recursiveFree(d->right);
-}
-
 void freeDendrogram(Dendrogram d) {
-    recursiveFree(d);
+    if (d == NULL) { return; }
+    freeDendrogram(d->left);
+    freeDendrogram(d->right);
+    free(d);
 	return;
 }
 
