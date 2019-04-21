@@ -8,6 +8,8 @@
 
 #define INF 9999
 
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths);
+
 // Contains number of out going edges from every vertice 
 NodeValues outDegreeCentrality(Graph g){
 	NodeValues outDegree;
@@ -105,43 +107,45 @@ NodeValues closenessCentrality(Graph g){
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
     int i = 0;
-    int split = 0;
     NodeValues close;
     close.noNodes = numVerticies(g);
     close.values = malloc(sizeof(double) * close.noNodes);
     for (i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
-        printf("\nPath from : %d\n", i);
-        printf("\n");
-        showShortestPaths(paths);
-        printf("\n");
         for (int j = 0; j < paths.noNodes; j++) {
-            printf("Pred of : %d\n", j);
-            split = 0;
-            PredNode * count = paths.pred[j];
-            // if multiple pred worth fraction each
-            while (count != NULL) { 
-                split++;
-                count = count->next;
-            }
-            while (paths.pred[j] != NULL) {
-                printf("Pred Node : %d\n", paths.pred[j]->v);
-                if (paths.pred[j]->v != i) {
-                    close.values[paths.pred[j]->v] = close.values[paths.pred[j]->v] + 1.0/split;
-                    printf("Value Update!\n");
-                }
-                paths.pred[j] = paths.pred[j]->next;
-            }
+            value_counter(i, j, close, paths);
         }
     }
 	return close;
 }
 
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths)  {
+    PredNode * count = paths.pred[curr];
+    int split = 0;
+    while (count != NULL) { 
+        split++;
+        count = count->next;
+    }
+    while (paths.pred[curr] != NULL) {
+        if (paths.pred[curr]->v != src) {
+            close.values[paths.pred[curr]->v] = close.values[paths.pred[curr]->v] + 1.0/split;
+                
+            value_counter(src, paths.pred[curr]->v, close, paths);
+        } 
+        paths.pred[curr] = paths.pred[curr]->next;
+    }
+}
+
+
 //
 NodeValues betweennessCentralityNormalised(Graph g){
-	//NodeValues close = betweennessCentrality(g);
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues close = betweennessCentrality(g);
+	int i = 0;
+	while (i < close.noNodes) {
+	    close.values[i] = 1.0/((close.noNodes - 1.0) * (close.noNodes - 2.0)) * close.values[i];
+	    i++;
+	}
+	return close;
 }
 
 //
