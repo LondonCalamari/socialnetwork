@@ -129,7 +129,7 @@ static void value_counter (int src, int curr, NodeValues close, ShortestPaths pa
     count = paths.pred[curr];
     while (count != NULL) {
         if (count->v != src) {
-            close.values[paths.pred[curr]->v] = close.values[paths.pred[curr]->v] + 1.0/split;
+            close.values[count->v] = close.values[count->v] + 1.0/split;
                 
             value_counter(src, count->v, close, paths);
         }
