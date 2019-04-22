@@ -88,14 +88,28 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         dendA[dendASize-1] = new;
 
         // Update distance using LW Single-link Method
-        double new_dist = distances[0][0];
+        for (int j = 0; j < numVerticies(g); j++) {
+            for (int k = 0; k < numVerticies(g); i++) {
+                if (j > k) {
+                    if (j == row && k == col) {
+                        double row_dist = distances[row][j];
+                        double col_dist = distances[col][j];
+                        double abs_dist = abs(row_dist - col_dist);
+                        double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
+
+                        distances[j][k] = new_dist; // TODO
+                    }
+                
+                }
+            }
+
+
+        }
 
         // Update dendrogram
 
     }
     
-
-
     return dendA[0];
 }
 
