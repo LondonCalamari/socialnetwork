@@ -24,12 +24,18 @@ static Dendrogram newDNODE(int v);
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
     // create 2D array to hold all distances
     double distances[numVerticies(g)][numVerticies(g)]; // = {1};
+    
+    // holds information on which index each cluster is at
+    int clusterKey[MAX][MAX]= {-1};
+    int initKeySize = numVerticies(g);
+
     for (int i = 0; i < numVerticies(g); i++) {
         for (int j = 0; j < numVerticies(g); j++) {
             distances[i][j] = MAX;
         }
+        clusterKey[i][0] = i;
     }
-    // Calculate distances between each pair of vertices
+    // calculate distances between each pair of vertices
     for (int i = 0; i < numVerticies(g); i++) {
         AdjList adj = outIncident(g, i);
         int col = 0;
@@ -66,8 +72,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         // find two closest clusters using dist array
         int row, col; 
         double min = MAX;
-        for (int x; x < numVerticies(g); x++) {
-            for (int y; y < numVerticies(g); y++) {
+        for (int x; x < initKeySize; x++) {
+            for (int y; y < initKeySize; y++) {
                 // only need to look half of matrix
                 if (x > y) {
                     if (distances[x][y] < min) { 
@@ -77,9 +83,11 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
                     }
                 }
             }
-        }
+        } 
+        if (min == MAX) break; // we are done if all is MAX
 
         // Create new col in dendA for cluster
+        initKeySize++;
         dendASize++;
         skip[row] = 1; skip[col] = 1;
         dendA = realloc(dendA, dendASize * sizeof(Dendrogram));
@@ -87,10 +95,14 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         new->left = dendA[row]; new->right = dendA[col];
         dendA[dendASize-1] = new;
 
+        // Change new cluster nodes to MAX
+        distances[row][col] = MAX;
+
         // Update distance using LW Single-link Method
-        for (int j = 0; j < numVerticies(g); j++) {
-            for (int k = 0; k < numVerticies(g); i++) {
+        for (int j = 0; j < initKeySize; j++) {
+            for (int k = 0; k < initKeySize; i++) {
                 if (j > k) {
+                    // TODO
                     if (j == row && k == col) {
                         double row_dist = distances[row][j];
                         double col_dist = distances[col][j];
@@ -98,6 +110,9 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
                         double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
 
                         distances[j][k] = new_dist; // TODO
+                        // TODO for every new row/col of the new cluster
+                        // we need to calculate the distnaces for those
+                        clusterKey[initKeySize-1][initKeySize-1] = new_dist;
                     }
                 
                 }
