@@ -55,8 +55,10 @@ int main(int argc, char* argv[]){
 		printf("Usage: ./testLanceWilliamsHAC [file]\n");
 		return EXIT_FAILURE;
 	}
+    printf("reading graph\n");
   	Graph g = readGraph(argv[1]);
 
+    printf("reading dendro\n");
 	Dendrogram dn =  LanceWilliamsHAC(g, 1);
 	
 	Tree allTree = printDendrogram(dn, 1);

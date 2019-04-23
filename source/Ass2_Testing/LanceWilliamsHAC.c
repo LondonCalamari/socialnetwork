@@ -4,6 +4,7 @@
 */
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "LanceWilliamsHAC.h"
 #include "Graph.h"
 #define numVertices numVerticies
@@ -18,25 +19,38 @@
    The function returns 'Dendrogram' structure (binary tree) with the required information.
  * 
  */
+
 // static void smallestDist(double *row, double *col, double *dist);
-static Dendrogram newDNODE(int v);
+//static Dendrogram newDNODE(int v);
 
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
+printf("INJN!\n");
     // create 2D array to hold all distances
-    double distances[numVerticies(g)][numVerticies(g)]; // = {1};
+    double distances[MAX][MAX]; // = {1};
+     
+    // Array to store dendro pointers 
+    //Dendrogram *dendA = malloc(sizeof(Dendrogram) * numVerticies(g));
     
-    // holds information on which index each cluster is at
-    int clusterKey[MAX][MAX]= {-1};
-    int initKeySize = numVerticies(g);
+    // holds info on nodes in each cluster
+    //int dendAKey[MAX][MAX] = {0};
 
-    for (int i = 0; i < numVerticies(g); i++) {
-        for (int j = 0; j < numVerticies(g); j++) {
+    // holds information on which index each cluster is at
+    int clusterKey[MAX][MAX] = {0};
+    int distSize = numVerticies(g);
+
+    // initalise the whole array to MAX
+    for (int i = 0; i < MAX; i++) {
+        for (int j = 0; j < MAX; j++) {
             distances[i][j] = MAX;
+            clusterKey[i][j] = -1;
+        //    dendAKey[i][j] = -1;
         }
         clusterKey[i][0] = i;
+      //  dendAKey[i][0] = -1;
     }
+
     // calculate distances between each pair of vertices
-    for (int i = 0; i < numVerticies(g); i++) {
+    for (int i = 0; i < distSize; i++) {
         AdjList adj = outIncident(g, i);
         int col = 0;
         while (adj->next != NULL) {
@@ -45,8 +59,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         }
     }    
     // get the max dist if there are two links
-    for (int i = 0; i < numVerticies(g); i++) {
-        for (int j = 0; j < numVerticies(g); i++) {
+    for (int i = 0; i < distSize; i++) {
+        for (int j = 0; j < distSize; j++) {
             if (distances[i][j] <= distances[j][i]) {
                 distances[i][j] = distances[j][i];
             } else {
@@ -54,17 +68,18 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             }
         }
     }
+    for (int i = 0; i < distSize+5;i++) {
+        for (int j = 0; j < distSize+5;j++) {
+            printf("[%f] ", distances[i][j]);
+        }
+        printf("\n");
     
-    // Array to store dendro pointers 
-    int dendASize = numVerticies(g);
-    Dendrogram *dendA = malloc(sizeof(Dendrogram) * dendASize);
-
-    // Array to know which cols to skip in dendA
-    int skip[MAX] = {0};
-    // create clusters for every vertex i
+    }
+       // create clusters for every vertex i
     for (int i = 0; i < numVerticies(g); i++) {
-        Dendrogram node = newDNODE(i);
-        dendA[i] = node;
+        //Dendrogram node = newDNODE(i);
+     //   dendA[i] = node;
+        //dendAKey[i][0] = i;
     }
 
     // For K=1 to N-1 ?? 
@@ -72,10 +87,9 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         // find two closest clusters using dist array
         int row, col; 
         double min = MAX;
-        for (int x; x < initKeySize; x++) {
-            for (int y; y < initKeySize; y++) {
-                // only need to look half of matrix
-                if (x > y) {
+        for (int x = 0; x < distSize; x++) {
+            for (int y = 0; y < distSize; y++) {
+                if (x > y) { // only need to look at 'half' of matrix
                     if (distances[x][y] < min) { 
                         min = distances[x][y]; 
                         row = x;
@@ -84,35 +98,56 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
                 }
             }
         } 
-        if (min == MAX) break; // we are done if all is MAX
+        if (min == MAX) break; // we are done if all is MAX // TODO
 
         // Create new col in dendA for cluster
-        initKeySize++;
-        dendASize++;
-        skip[row] = 1; skip[col] = 1;
-        dendA = realloc(dendA, dendASize * sizeof(Dendrogram));
-        Dendrogram new = newDNODE(MAX);
-        new->left = dendA[row]; new->right = dendA[col];
-        dendA[dendASize-1] = new;
+        distSize++;
+//        dendA = realloc(dendA, distSize * sizeof(Dendrogram)); // make one more slot
+        //Dendrogram new = newDNODE(MAX);
+ //       new->left = dendA[row]; new->right = dendA[col];
+        //dendA[distSize-1] = new; 
+
+        // copy the 'row cluster key'
+        int newCluster[MAX] = {0};
+        int count = 0;
+        for (int count = 0; count < MAX; count++) {
+            if (clusterKey[row][count] == -1) break;
+            newCluster[i] = clusterKey[row][i];
+        }
+
+        // add the 'col cluster key' to row to make new key
+        while (clusterKey[col][count] != -1) {
+            newCluster[count] = clusterKey[col][count];
+            count++;
+        }
+        newCluster[count+1] = -1;
+
+        // Make new cluster key 
+        count = 0;
+        while (newCluster[count] != -1) {
+            clusterKey[distSize-1][count] = newCluster[count];
+         //   dendAKey[distSize-1][count] = newCluster[count];
+            count++;
+        }
 
         // Change new cluster nodes to MAX
         distances[row][col] = MAX;
 
         // Update distance using LW Single-link Method
-        for (int j = 0; j < initKeySize; j++) {
-            for (int k = 0; k < initKeySize; i++) {
+        for (int j = 0; j < distSize; j++) {
+            for (int k = 0; k < distSize; k++) {
                 if (j > k) {
                     // TODO
                     if (j == row && k == col) {
                         double row_dist = distances[row][j];
                         double col_dist = distances[col][j];
-                        double abs_dist = abs(row_dist - col_dist);
+                        double abs_dist = fabs(row_dist - col_dist);
                         double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
 
                         distances[j][k] = new_dist; // TODO
                         // TODO for every new row/col of the new cluster
                         // we need to calculate the distnaces for those
-                        clusterKey[initKeySize-1][initKeySize-1] = new_dist;
+                        clusterKey[distSize-1][distSize-1] = new_dist;
                     }
                 
                 }
@@ -122,11 +157,11 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         }
 
         // Update dendrogram
-
     }
     
-    return dendA[0];
+    return NULL;
 }
+/*
 
 Dendrogram newDNODE(int v) {
     Dendrogram node = malloc(sizeof(Dendrogram));
@@ -135,6 +170,7 @@ Dendrogram newDNODE(int v) {
     node->right = NULL;
     return node;
 }
+*/
 
 /*
 // Find the smallest value in distance[][] 
