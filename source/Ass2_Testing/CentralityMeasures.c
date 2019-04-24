@@ -120,20 +120,38 @@ NodeValues betweennessCentrality(Graph g){
 	return close;
 }
 
-static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split )  {
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split)  {
     PredNode * count = paths.pred[curr];
-    int spliter = 0;
+    int splitter = 0;
+    // check if it diverges
     if (count != NULL ) { count = count->next;}
     while (count != NULL) { 
-        spliter++;
+        splitter++;
         count = count->next;
     }
-    split = split + spliter;
+    split = split + splitter;
     count = paths.pred[curr];
-    double one = 1;
+    int i = 0;
+    // check if it converges
+    /*
+    if (splitter == 0) {
+        while (i < paths.noNodes) {
+            PredNode * current =  paths.pred[i];
+            if (current == NULL) { i++; continue; }
+            while (current != NULL) {
+                if (current->v == curr) {
+                    splitter++;
+                }
+                current = current->next;
+            }
+            i++;
+        }
+        split = split - splitter + 1;
+    }
+    */
     while (count != NULL) {
         if (count->v != src) {
-            close.values[count->v] = close.values[count->v] + one/split;
+            close.values[count->v] = close.values[count->v] + 1.0/split;
             value_counter(src, count->v, close, paths, split);
         }
         count = count->next;
