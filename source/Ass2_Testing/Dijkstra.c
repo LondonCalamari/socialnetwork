@@ -14,7 +14,7 @@ static PredNode *newPredNode(int vert);
 // for a given vertex, return all the shortest paths
 ShortestPaths dijkstra(Graph g, Vertex v) {
     ShortestPaths paths;
-    paths.noNodes = numVerticies(g); // is this it?
+    paths.noNodes = numVerticies(g); 
     paths.src = v;
     paths.dist = malloc(sizeof(int) * numVerticies(g));
     assert(paths.dist != NULL);

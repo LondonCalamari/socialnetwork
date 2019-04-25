@@ -131,24 +131,6 @@ static void value_counter (int src, int curr, NodeValues close, ShortestPaths pa
     }
     split = split + splitter;
     count = paths.pred[curr];
-    int i = 0;
-    // check if it converges
-    /*
-    if (splitter == 0) {
-        while (i < paths.noNodes) {
-            PredNode * current =  paths.pred[i];
-            if (current == NULL) { i++; continue; }
-            while (current != NULL) {
-                if (current->v == curr) {
-                    splitter++;
-                }
-                current = current->next;
-            }
-            i++;
-        }
-        split = split - splitter + 1;
-    }
-    */
     while (count != NULL) {
         if (count->v != src) {
             close.values[count->v] = close.values[count->v] + 1.0/split;
