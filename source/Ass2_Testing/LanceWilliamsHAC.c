@@ -68,8 +68,10 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     // For K=1 to N-1 ?? TODO or we will do until all unreachable 
     for (int i = 0; i < distSize; i++) {
 
+/*
     // -------- PRINT FUNCTION FOR TESTING --------//
     for (int i = 0; i < distSize;i++) {
+
         for (int j = 0; j < distSize;j++) {
             if (i <= j) { printf("[X] "); continue; }
             printf("[%0.3f] ", distances[i][j]);
@@ -78,7 +80,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     
     }
     // ------------------------------------------- // 
-    
+*/    
         // find location of the two closest clusters using dist array
         int row, col; 
         double min = MAX;
@@ -94,7 +96,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             }
         } 
         if (min == MAX) break; // we are done if all is MAX // TODO
-        printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
+  //      printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
 
         // create new col in dendA for cluster
         // && corresponding new row and col for distances[][]
@@ -110,29 +112,6 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         distances[row][col] = -1;
         distances[col][row] = -1; // we dont look here but just incase lmao
 
-/*
-        // Update distance using LW Single-link Method
-        for (int j = 0; j < distSize; j++) {
-            for (int k = 0; k < distSize; k++) {
-                if (j > k) {
-                    // TODO
-                    if (j == row && k == col) {
-                        double row_dist = distances[row][j];
-                        double col_dist = distances[col][j];
-                        double abs_dist = fabs(row_dist - col_dist);
-                        double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
-
-                        distances[j][k] = new_dist; // TODO
-                        // TODO for every new row/col of the new cluster
-                        // we need to calculate the distnaces for those
-                    }
-                
-                }
-            }
-
-
-        }
-*/
         // Update distance for new cluster ROW
         for (int j = 0; j < distSize; j++) {
             double row_dist = distances[row][j];
