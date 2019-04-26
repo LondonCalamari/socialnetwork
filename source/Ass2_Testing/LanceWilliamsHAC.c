@@ -49,12 +49,13 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     }    
 
     // get the max dist if there are two links
+    // we only need to use one half of the matrix
     for (int i = 0; i < distSize; i++) {
         for (int j = 0; j < distSize; j++) {
-            if (distances[i][j] <= distances[j][i]) {
+            if (distances[i][j] == -1 && distances[j][i] != -1) {
                 distances[i][j] = distances[j][i];
-            } else {
-                distances[j][i] = distances[i][j];
+            } else if (distances[j][i] > 0 && distances[i][j] > distances[j][i]) {
+                distances[i][j] = distances[j][i];
             }
         }
     }
@@ -66,9 +67,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     }
 
     // For K=1 to N-1 ?? TODO or we will do until all unreachable 
-    for (int i = 0; i < distSize; i++) {
+    for (int i = 0; i < numVerticies(g)+20; i++) {
 
-/*
     // -------- PRINT FUNCTION FOR TESTING --------//
     for (int i = 0; i < distSize;i++) {
 
@@ -80,7 +80,6 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     
     }
     // ------------------------------------------- // 
-*/    
         // find location of the two closest clusters using dist array
         int row, col; 
         double min = MAX;
@@ -96,7 +95,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             }
         } 
         if (min == MAX) break; // we are done if all is MAX // TODO
-  //      printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
+        printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
 
         // create new col in dendA for cluster
         // && corresponding new row and col for distances[][]
@@ -112,6 +111,19 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         distances[row][col] = -1;
         distances[col][row] = -1; // we dont look here but just incase lmao
 
+        // Update dist by find the smallest number in each column
+        for (int j = 0; j < distSize; j++) {
+            double new_dist = MAX;
+            for (int k = 0; k < distSize; k++) {
+                if (distances[k][j] < new_dist && distances[k][j] > 0) {
+                    new_dist = distances[k][j];
+                }
+            }
+            distances[distSize-1][j] = new_dist;
+        }
+        distances[distSize-1][row] = -1;
+        distances[distSize-1][col] = -1;
+        /*
         // Update distance for new cluster ROW
         for (int j = 0; j < distSize; j++) {
             double row_dist = distances[row][j];
@@ -119,7 +131,16 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             double abs_dist = fabs(row_dist - col_dist);
             double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
 
-            distances[distSize-1][j] = new_dist;
+            if (row_dist == -1 && col_dist == -1) {
+                distances[distSize-1][j]= -1;
+            } else if (row_dist == -1 && col_dist != -1) {
+                distances[distSize-1][j] = col_dist;
+            } else if (col_dist == -1 && row_dist != -1) {
+                distances[distSize-1][j] = row_dist;
+            } else {
+                distances[distSize-1][j] = new_dist;
+            }
+
         }
 
         // Update distance for new cluster COL
@@ -129,8 +150,17 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             double abs_dist = fabs(row_dist - col_dist);
             double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
             
-            distances[j][distSize-1] = new_dist;
+            if (row_dist == -1 && col_dist == -1) {
+                distances[j][distSize-1] = -1;
+            } else if (row_dist == -1 && col_dist != -1) {
+                distances[j][distSize-1] = col_dist;
+            } else if (col_dist == -1 && row_dist != -1) {
+                distances[j][distSize-1] = row_dist;
+            } else {
+                distances[j][distSize-1] = new_dist;
+            }
         }
+        */
     }
     return dendA[distSize-1];
 }
