@@ -67,22 +67,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
         dendA[i] = node;
     }
 
-    // For K=1 to N-1 ?? TODO or we will do until all unreachable 
-    for (int i = 0; i < 6; i++) {
-/*
-    // -------- PRINT FUNCTION FOR TESTING --------//
-    for (int i = 0; i < distSize;i++) {
-
-        for (int j = 0; j < distSize;j++) {
-            if (i == j) { printf("[XXXX] "); continue; }
-            printf("[%0.3f] ", distances[i][j]);
-        }
-        printf("\n");
-    
-    }
-*/    
-    // ------------------------------------------- // 
-
+    // Until the whole matrix is -1 we continue
+    for (int i = 0; i < distSize; i++) {
         // find location of the two closest clusters using dist array
         int row, col; 
         double min = MAX;
@@ -98,7 +84,6 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
             }
         } 
         if (min == MAX) break; // we are done if all is MAX 
-       // printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
 
         // create new col in dendA for cluster
         // && corresponding new row and col for distances[][]
@@ -112,8 +97,6 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
 
         // Update dist by find the smallest number of the two in each col
         for (int j = 0; j < distSize; j++) {
-   //         printf("dist[%d][%d]: %f, dist[%d][%d]: %f\n", row, j, distances[row][j], 
-     //                                                      col, j, distances[col][j]);
             if (distances[row][j] == -1 && distances[col][j] == -1) {
                 distances[distSize-1][j] = -1;
             } else if (distances[row][j] == -1 && distances[col][j] != -1) {
@@ -170,3 +153,17 @@ void freeDendrogram(Dendrogram d) {
     free(d);
 	return;
 }
+
+/*
+    // -------- PRINT FUNCTION FOR TESTING --------//
+    for (int i = 0; i < distSize;i++) {
+
+        for (int j = 0; j < distSize;j++) {
+            if (i == j) { printf("[XXXX] "); continue; }
+            printf("[%0.3f] ", distances[i][j]);
+        }
+        printf("\n");
+    
+    }
+    // ------------------------------------------- // 
+*/ 
