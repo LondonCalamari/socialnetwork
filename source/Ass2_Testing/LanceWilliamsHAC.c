@@ -20,7 +20,7 @@
  * 
  */
 
-static Dendrogram newDNODE(int v);
+static Dendrogram newDNODE(int v); // creates new Dnode
 
 Dendrogram LanceWilliamsHAC(Graph g, int method) {
     // create 2D array to hold all distances
@@ -49,7 +49,6 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     }    
 
     // get the max dist if there are two links
-    // we only need to use one half of the matrix
     for (int i = 0; i < distSize; i++) {
         for (int j = 0; j < distSize; j++) {
             if (distances[i][j] == -1 && distances[j][i] != -1) {
@@ -69,26 +68,28 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     }
 
     // For K=1 to N-1 ?? TODO or we will do until all unreachable 
-    for (int i = 0; i < numVerticies(g)+20; i++) {
-
+    for (int i = 0; i < 6; i++) {
+/*
     // -------- PRINT FUNCTION FOR TESTING --------//
     for (int i = 0; i < distSize;i++) {
 
         for (int j = 0; j < distSize;j++) {
-            if (i == j) { printf("[X] "); continue; }
+            if (i == j) { printf("[XXXX] "); continue; }
             printf("[%0.3f] ", distances[i][j]);
         }
         printf("\n");
     
     }
+*/    
     // ------------------------------------------- // 
+
         // find location of the two closest clusters using dist array
         int row, col; 
         double min = MAX;
         for (int x = 0; x < distSize; x++) {
             for (int y = 0; y < distSize; y++) {
-                if (x > y) { // only need to look at 'half' of matrix
-                    if (distances[x][y] < min && distances[x][y] > 0)  { 
+                if (x > y && distances[x][y] > 0) { 
+                    if (distances[x][y] < min)  { 
                         min = distances[x][y]; 
                         row = x;
                         col = y;
@@ -96,73 +97,58 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
                 }
             }
         } 
-        if (min == MAX) break; // we are done if all is MAX // TODO
-        printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
+        if (min == MAX) break; // we are done if all is MAX 
+       // printf("Min is at [%d][%d] =  %0.3f\n\n", row, col, min);
 
         // create new col in dendA for cluster
         // && corresponding new row and col for distances[][]
         distSize++;
         dendA = realloc(dendA, distSize * sizeof(Dendrogram)); // make one more slot
 
-        // Updte dendrogram by merging the two trees
+        // Update dendrogram by merging the two trees
         Dendrogram new = newDNODE(-1);
         new->left = dendA[row]; new->right = dendA[col];
         dendA[distSize-1] = new; 
 
-        // Change new cluster nodes to unreachable
-        distances[row][col] = -1;
-        distances[col][row] = -1; // we dont look here but just incase lmao
-
-        // Update dist by find the smallest number in each column
+        // Update dist by find the smallest number of the two in each col
         for (int j = 0; j < distSize; j++) {
-            double new_dist = MAX;
-            for (int k = 0; k < distSize; k++) {
-                if (distances[k][j] < new_dist && distances[k][j] > 0) {
-                    new_dist = distances[k][j];
+   //         printf("dist[%d][%d]: %f, dist[%d][%d]: %f\n", row, j, distances[row][j], 
+     //                                                      col, j, distances[col][j]);
+            if (distances[row][j] == -1 && distances[col][j] == -1) {
+                distances[distSize-1][j] = -1;
+            } else if (distances[row][j] == -1 && distances[col][j] != -1) {
+                distances[distSize-1][j] = distances[col][j];
+            } else if (distances[col][j] == -1 && distances[row][j] != -1) {
+                distances[distSize-1][j] = distances[row][j];
+            } else if (distances[row][j] < distances[col][j]) {
+                distances[distSize-1][j] = distances[row][j];
+            } else {
+                distances[distSize-1][j] = distances[col][j];
+            }
+           
+        }
+
+        distances[distSize-1][row] = -1.0;
+        distances[distSize-1][col] = -1.0;
+
+        // make sure you cant reach nodes in the new cluster
+        for (int cols = 0; cols < distSize; cols++) {
+            // ROWS
+            distances[row][cols] = -1;
+            distances[col][cols] = -1;
+            // COLS
+            distances[cols][row] = -1;
+            distances[cols][col] = -1;
+        }
+
+        // Copy the bottom triangle to the top triangle of the matrix
+        for (int q = 0; q < distSize; q++) {
+            for (int w = 0; w < distSize; w++) {
+                if (q > w) {
+                    distances[w][q] = distances[q][w];
                 }
             }
-            distances[distSize-1][j] = new_dist;
         }
-        distances[distSize-1][row] = -1;
-        distances[distSize-1][col] = -1;
-        /*
-        // Update distance for new cluster ROW
-        for (int j = 0; j < distSize; j++) {
-            double row_dist = distances[row][j];
-            double col_dist = distances[col][j];
-            double abs_dist = fabs(row_dist - col_dist);
-            double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
-
-            if (row_dist == -1 && col_dist == -1) {
-                distances[distSize-1][j]= -1;
-            } else if (row_dist == -1 && col_dist != -1) {
-                distances[distSize-1][j] = col_dist;
-            } else if (col_dist == -1 && row_dist != -1) {
-                distances[distSize-1][j] = row_dist;
-            } else {
-                distances[distSize-1][j] = new_dist;
-            }
-
-        }
-
-        // Update distance for new cluster COL
-        for (int j = 0; j < distSize; j++) {
-            double row_dist = distances[row][j];
-            double col_dist = distances[col][j];
-            double abs_dist = fabs(row_dist - col_dist);
-            double new_dist = 0.5 * (row_dist + col_dist - abs_dist); 
-            
-            if (row_dist == -1 && col_dist == -1) {
-                distances[j][distSize-1] = -1;
-            } else if (row_dist == -1 && col_dist != -1) {
-                distances[j][distSize-1] = col_dist;
-            } else if (col_dist == -1 && row_dist != -1) {
-                distances[j][distSize-1] = row_dist;
-            } else {
-                distances[j][distSize-1] = new_dist;
-            }
-        }
-        */
     }
     return dendA[distSize-1];
 }
@@ -184,5 +170,3 @@ void freeDendrogram(Dendrogram d) {
     free(d);
 	return;
 }
-
-
