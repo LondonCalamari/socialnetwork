@@ -30,15 +30,6 @@ Graph newGraph(int noNodes) {
         g->nodeList[i] = createNode(i, 0);
     }
 
-/*
-    /-  for testing we will fill the graph randomly -/
-    for (int i = 0; i < noNodes; i++) {
-        int r = rand()%(noNodes*2);
-        for (int j = 0; j < r; j++) {
-            insertEdge(g, i, rand()%noNodes, rand()%50);
-        }
-    }
-*/
     return g;
 }
 
@@ -54,7 +45,6 @@ AdjList createNode(int v, int weight) {
 // insert edge in increasing order of cost 
 void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     // first check if the edge isn't already in g
- // printf("passing in src = %d, dest = %d, weight = %d\n", src, dest, weight);
     if (g->nV < src || src < 0 || g->nV < dest || dest < 0) { return; }
   
     if (adjacent(g, src, dest)) { return; }
@@ -66,26 +56,21 @@ void  insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
 
         } else {
             // adding the node in order of cost
-            AdjList prev; //= g->nodeList[src];
-            AdjList curr = g->nodeList[src]; //prev->next;
+            AdjList prev; 
+            AdjList curr = g->nodeList[src]; 
             while (curr != NULL && curr->weight <= weight) {
                 prev = curr;
                 curr = curr->next;     
             }
-          //  printf("here 4\n");
             AdjList new = createNode(dest, weight);
             new->next = curr;
             prev->next = new;
-
-            //prev->next = new;
-            //new->next = curr;
         }
-        
-        
         g->nE++;
     }
 }
 
+// removes edge between two vertices
 void  removeEdge(Graph g, Vertex src, Vertex dest) {
     // first check if the edge exists or not
     if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
@@ -113,6 +98,7 @@ void  removeEdge(Graph g, Vertex src, Vertex dest) {
     }
 }
 
+// checks if two vertices are connected
 bool  adjacent(Graph g, Vertex src, Vertex dest) {
     if (src > g->nV || dest > g->nV || dest < 0 || src < 0) {
         return false;
@@ -152,14 +138,9 @@ AdjList outIncident(Graph g, Vertex v) {
 
 // Retuns an AdjList of the vertices incoming to vertex V
 AdjList inIncident(Graph g, Vertex v) {
-    //AdjList inward = malloc(sizeof(AdjList));
-  //  inward = NULL;
-   // inward->next = NULL;
-    //AdjList curr;
-    AdjList inward = malloc(sizeof(AdjList)); //createNode(9999,9999);
+    AdjList inward = malloc(sizeof(AdjList)); 
     inward = NULL;
     int firstNodeFlag = 0;
-    // Can't we jsut use if i = 0; ???
     // Look through every nodeList in the graph for vertex V
     for (int i = 0; i < g->nV; i++) {
         if (i == v) { continue; }
@@ -324,5 +305,3 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 */
-
-

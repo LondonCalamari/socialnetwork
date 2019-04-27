@@ -8,6 +8,8 @@
 
 #define INF 9999
 
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split);
+
 // Contains number of out going edges from every vertice 
 NodeValues outDegreeCentrality(Graph g){
 	NodeValues outDegree;
@@ -76,7 +78,6 @@ NodeValues closenessCentrality(Graph g){
 
     for (int i = 0; i < close.noNodes; i++) {
         ShortestPaths paths = dijkstra(g, i);
-        //showShortestPaths(paths);
         // find the number of reachable nodes
         double reachable = 0;
         for (int k = 0; k < paths.noNodes; k++) {
@@ -104,32 +105,51 @@ NodeValues closenessCentrality(Graph g){
 
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
-    int j, i =0;
+    int i = 0;
+    int split = 1;
     NodeValues close;
     close.noNodes = numVerticies(g);
     close.values = malloc(sizeof(double) * close.noNodes);
     for (i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
-        for (j = 0; j < paths.noNodes; j++) {
-            while (paths.pred[j] != NULL) {
-                close.values[paths.pred[j]->v]++;
-                paths.pred[j] = paths.pred[j]->next;
-            }
+        for (int j = 0; j < paths.noNodes; j++) {
+            value_counter(i, j, close, paths, split);
         }
-    }
-    for (i = 0; i < close.noNodes; i++) {
-        close.values[i] = close.values[i]/close.noNodes;
     }
 	return close;
 }
 
-//
-NodeValues betweennessCentralityNormalised(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split)  {
+    PredNode * count = paths.pred[curr];
+    int splitter = 0;
+    // check if it diverges
+    if (count != NULL ) { count = count->next;}
+    while (count != NULL) { 
+        splitter++;
+        count = count->next;
+    }
+    split = split + splitter;
+    count = paths.pred[curr];
+    while (count != NULL) {
+        if (count->v != src) {
+            close.values[count->v] = close.values[count->v] + 1.0/split;
+            value_counter(src, count->v, close, paths, split);
+        }
+        count = count->next;
+    }
 }
 
-//
+// adjusts the value of closeness
+NodeValues betweennessCentralityNormalised(Graph g){
+	NodeValues close = betweennessCentrality(g);
+	int i = 0;
+	while (i < close.noNodes) {
+	    close.values[i] = 1.0/((close.noNodes - 1.0) * (close.noNodes - 2.0)) * close.values[i];
+	    i++;
+	}
+	return close;
+}
+
 void showNodeValues(NodeValues values){
     //printf("values.noNodes is %d\n", values.noNodes);
     for (int i = 0; i < values.noNodes; i++) {
@@ -137,17 +157,6 @@ void showNodeValues(NodeValues values){
     }
 }
 
-//
 void freeNodeValues(NodeValues values){
     free(values.values);
 }
-
-
-
-
-
-
-
-
-
-

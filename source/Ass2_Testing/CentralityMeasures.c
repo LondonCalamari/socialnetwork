@@ -78,7 +78,6 @@ NodeValues closenessCentrality(Graph g){
 
     for (int i = 0; i < close.noNodes; i++) {
         ShortestPaths paths = dijkstra(g, i);
-        //showShortestPaths(paths);
         // find the number of reachable nodes
         double reachable = 0;
         for (int k = 0; k < paths.noNodes; k++) {
@@ -103,7 +102,6 @@ NodeValues closenessCentrality(Graph g){
     }
 	return close;
 }
-
 
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
@@ -152,7 +150,6 @@ NodeValues betweennessCentralityNormalised(Graph g){
 	return close;
 }
 
-//
 void showNodeValues(NodeValues values){
     //printf("values.noNodes is %d\n", values.noNodes);
     for (int i = 0; i < values.noNodes; i++) {
@@ -160,17 +157,6 @@ void showNodeValues(NodeValues values){
     }
 }
 
-//
 void freeNodeValues(NodeValues values){
     free(values.values);
 }
-
-
-
-
-
-
-
-
-
-

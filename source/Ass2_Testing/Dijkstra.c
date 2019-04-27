@@ -8,8 +8,6 @@
 #define INF 9999
 
 static PredNode *newPredNode(int vert);
-//static void appendNode(PredNode *base, PredNode *new); 
-// static PredNode appendNode(PredNode old, PredNode new, int item);
 
 // for a given vertex, return all the shortest paths
 ShortestPaths dijkstra(Graph g, Vertex v) {
@@ -149,10 +147,3 @@ void  freeShortestPaths(ShortestPaths paths) {
     free(paths.pred);
     free(paths.dist);
 }
-
-
-
-
-
-
-
