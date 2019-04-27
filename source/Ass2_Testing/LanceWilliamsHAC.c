@@ -56,6 +56,8 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
                 distances[i][j] = distances[j][i];
             } else if (distances[j][i] > 0 && distances[i][j] > distances[j][i]) {
                 distances[i][j] = distances[j][i];
+            } else {
+                distances[j][i] = distances[i][j];
             }
         }
     }
@@ -73,7 +75,7 @@ Dendrogram LanceWilliamsHAC(Graph g, int method) {
     for (int i = 0; i < distSize;i++) {
 
         for (int j = 0; j < distSize;j++) {
-            if (i <= j) { printf("[X] "); continue; }
+            if (i == j) { printf("[X] "); continue; }
             printf("[%0.3f] ", distances[i][j]);
         }
         printf("\n");
