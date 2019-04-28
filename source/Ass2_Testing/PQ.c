@@ -110,76 +110,13 @@ void  showPQ(PQ pq) {
     for (int i = 0; i < pq->nitems; i++) {
         printf("[%d](%d)->", pq->nodes[i].key, pq->nodes[i].value);
     }
-//    printf("[X]\n");
 }
 
 // free's PQ
 void  freePQ(PQ pq) {
-    /*
-    for (int i = 0; i < pq->nitems; i++) {
-        free(pq->nodes[i]);
-    }
-    */
     free(pq->nodes);
     free(pq);
 }
 
-/*
-ItemPQ newItemPQ(int a, int b){
-
-  ItemPQ *p = malloc(sizeof(struct ItemPQ)) ;
-  p->key = a;
-  p->value = b;
-  
-  return *p;
-}
 
 
-// Main for testing
-int main (int argc, char *argv[]) {
-    printf("=== Testing ===\n");
-    PQ pq = newPQ();
-    addPQ(pq,newItemPQ(1,100));
-    printf("addPQ: {1,100}\n");
-    addPQ(pq,newItemPQ(2,15));
-    printf("addPQ: {2,15}\n");
-    addPQ(pq,newItemPQ(3,1));
-    printf("addPQ: {3,1}\n");
-    addPQ(pq,newItemPQ(4,4));
-    printf("addPQ: {4,4}\n");
-    addPQ(pq,newItemPQ(4,8));
-    printf("addPQ: {4,8}\n");
-    addPQ(pq,newItemPQ(5,3));
-    printf("addPQ: {5,3}\n");
-    addPQ(pq,newItemPQ(2,3));
-    printf("addPQ: {2,3}\n");
-    addPQ(pq,newItemPQ(7,4));
-    printf("addPQ: {7,4}\n");
-    addPQ(pq,newItemPQ(9,2));
-    printf("addPQ: {9,2}\n");
-    addPQ(pq,newItemPQ(2,6));
-    printf("addPQ: {2,6}\n");
-    addPQ(pq,newItemPQ(22,6));
-    printf("addPQ: {22,6}\n");
-
-    dequeuePQ(pq);
-    showPQ(pq);
-
-    dequeuePQ(pq);
-    showPQ(pq);
-    dequeuePQ(pq);
-    showPQ(pq);
-    dequeuePQ(pq);
-    showPQ(pq);
-    dequeuePQ(pq);
-    showPQ(pq);
-    dequeuePQ(pq);
-    showPQ(pq);
-    dequeuePQ(pq);
-    showPQ(pq);
-
-    free(pq);
-    printf("END\n=== Complete ===\n");
-    return EXIT_SUCCESS;
-}
-*/

@@ -105,12 +105,11 @@ NodeValues closenessCentrality(Graph g){
 
 // The node that is on the most shortest routes is the most central
 NodeValues betweennessCentrality(Graph g){
-    int i = 0;
     int split = 1;
     NodeValues close;
     close.noNodes = numVerticies(g);
     close.values = malloc(sizeof(double) * close.noNodes);
-    for (i = 0; i < numVerticies(g); i++) {
+    for (int i = 0; i < numVerticies(g); i++) {
         ShortestPaths paths = dijkstra(g, i);
         for (int j = 0; j < paths.noNodes; j++) {
             value_counter(i, j, close, paths, split);
@@ -119,6 +118,7 @@ NodeValues betweennessCentrality(Graph g){
 	return close;
 }
 
+// goes through the whole path from a node to the source recursively 
 static void value_counter (int src, int curr, NodeValues close, ShortestPaths paths, int split)  {
     PredNode * count = paths.pred[curr];
     int splitter = 0;
@@ -151,7 +151,6 @@ NodeValues betweennessCentralityNormalised(Graph g){
 }
 
 void showNodeValues(NodeValues values){
-    //printf("values.noNodes is %d\n", values.noNodes);
     for (int i = 0; i < values.noNodes; i++) {
         printf("%d: %f\n", i, values.values[i]);
     }
