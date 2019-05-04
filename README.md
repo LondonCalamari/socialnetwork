@@ -28,15 +28,15 @@ The main focus of this assignment is to read graph data from a given file, build
 - [x] outDegreeCentrality
 - [x] inDegreeCentrality
 - [x] degreeCentrality
-- [ ] closenessCentrality
-- [ ] betweennessCentrality
-- [ ] betweennessCentralityNormalised
-- [ ] showNodeValues
-- [ ] freeNodeValues
+- [x] closenessCentrality
+- [x] betweennessCentrality
+- [x] betweennessCentralityNormalised
+- [x] showNodeValues
+- [x] freeNodeValues
 
 ### Part 4: Discovering Community (15%)
-- [ ] Dendrogram LanceWilliamsHAC(Graph g, int method);
-- [ ] freeDendrogram
+- [x] Dendrogram LanceWilliamsHAC(Graph g, int method);
+- [x] freeDendrogram
 
 ### Style, Comments and Complexity: 20%
 - [x] Function names as functionName
